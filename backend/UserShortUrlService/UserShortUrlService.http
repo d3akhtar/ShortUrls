@@ -1,0 +1,6 @@
+@UserShortUrlService_HostAddress = http://localhost:5227
+
+GET {{UserShortUrlService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

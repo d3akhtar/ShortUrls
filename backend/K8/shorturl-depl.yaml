@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shorturl-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shorturlservice
+  template:
+    metadata:
+      labels:
+        app: shorturlservice
+    spec:
+      containers:
+      - name: shorturlservice
+        image: d3akhtar/shorturlservice
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shorturl-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: shorturlservice
+  ports:
+  - name: shorturlservice
+    protocol: TCP
+    port: 8080
+    targetPort: 8080

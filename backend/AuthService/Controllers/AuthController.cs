@@ -36,7 +36,7 @@ namespace AuthService.Controllers
             return Ok(_mapper.Map<IEnumerable<UserReadDTO>>(users));
         }
 
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public ActionResult Login([FromBody]LoginRequestDTO loginRequest)
         {
             var user = _userManager.FindUserWithEmail(loginRequest.Email);
@@ -70,7 +70,7 @@ namespace AuthService.Controllers
             );
         }
 
-        [HttpPost("/register")]
+        [HttpPost("register")]
         public ActionResult RegisterUser([FromBody]RegisterRequestDTO registerRequest){
             var email = new EmailAddressAttribute();
             if (ModelState.IsValid && email.IsValid(registerRequest.Email) && _userManager.FindUserWithEmail(registerRequest.Email) == null){

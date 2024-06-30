@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "RONN6vdsAmwI5wug4I+iGEZa/QGbp42tijxdYM2JqUM=",
+  "Source": "UserShortUrlService",
+  "BasePath": "_content/UserShortUrlService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
