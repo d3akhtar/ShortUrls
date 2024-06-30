@@ -1,0 +1,6 @@
+@AliasService_HostAddress = http://localhost:5050
+
+GET {{AliasService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
