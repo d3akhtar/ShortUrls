@@ -5,8 +5,10 @@ namespace AuthService.Data.Repository
     public interface IUserManager
     {
         void AddUser(User user);
-        void FindUserWithEmail(string email);
-        void GetUserById(string id);
+        IEnumerable<User> GetAllUsers();
+        User FindUserWithEmail(string email);
+        User GetUserById(string id);
+        bool IsPasswordValid(User user, string password);
         bool SaveChanges();
     }
 }

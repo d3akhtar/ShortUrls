@@ -2,6 +2,8 @@ using AuthService.Model;
 
 namespace AuthService.Data.Repository
 {
+    using System.Collections.Generic;
+    using BCrypt.Net;
     public class UserManager : IUserManager
     {
         private readonly AppDbContext _db;
@@ -12,22 +14,37 @@ namespace AuthService.Data.Repository
         }
         public void AddUser(User user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            _db.Add(user);
         }
 
-        public void FindUserWithEmail(string email)
+        public User FindUserWithEmail(string email)
         {
-            throw new NotImplementedException();
+            return _db.Users.FirstOrDefault(u => u.Email == email);
         }
 
-        public void GetUserById(string id)
+        public IEnumerable<User> GetAllUsers()
         {
-            throw new NotImplementedException();
+            return _db.Users;
+        }
+
+        public User GetUserById(string id)
+        {
+            return _db.Users.FirstOrDefault(u => u.UserId == id);
+        }
+
+        public bool IsPasswordValid(User user, string password)
+        {
+            return BCrypt.Verify(password, user.HashedPassword);
         }
 
         public bool SaveChanges()
         {
-            throw new NotImplementedException();
+            return _db.SaveChanges() >= 0;
         }
     }
 }

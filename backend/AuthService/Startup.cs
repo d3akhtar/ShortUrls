@@ -1,5 +1,6 @@
 
 using AuthService.Data;
+using AuthService.Data.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ public class Startup
         services.AddSwaggerGen();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Users"));
+        services.AddScoped<IUserManager, UserManager>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
