@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using UserShortUrlService.AsyncDataServices;
 using UserShortUrlService;
 using UserShortUrlService.SyncDataServices.Grpc;
+using UserShortUrlService.SyncDataServices.Http;
 public class Startup
 {
     public IConfiguration Configuration { get; set; }
@@ -32,6 +33,7 @@ public class Startup
         services.AddScoped<IUserShortUrlCodeRepository, UserShortUrlCodeRepository>();
         services.AddHostedService<RabbitMQSubscriber>();
         services.AddScoped<IUserDataClient, UserDataClient>();
+        services.AddHttpClient<IShortUrlDataClient, HttpShortUrlDataClient>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
