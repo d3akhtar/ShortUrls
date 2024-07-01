@@ -30,8 +30,8 @@ namespace UserShortUrlService.Controller
         [HttpGet]
         public ActionResult<IEnumerable<UserShortUrl>> GetAllUserUrlCodes()
         {
-            var users = _repo.GetAllUserShortUrlCodes(); 
-            return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(users));
+            var allUserShortUrls = _repo.GetAllUserShortUrlCodes(); 
+            return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(allUserShortUrls));
         }
 
         [HttpPost("{userId}")]
@@ -51,6 +51,18 @@ namespace UserShortUrlService.Controller
                 else{
                     return BadRequest(new { Message = "No short urls were added for this user, maybe they were already added or they don't exist."});
                 }
+            }
+            else{
+                return NotFound(new { Message = "User not found."} );
+            }
+        }
+
+        [HttpGet("{userId}")]
+        public ActionResult<UserShortUrlReadDTO> GetShortUrlsForUser(string userId)
+        {
+            if (_repo.DoesUserWithIdExist(userId)){
+                var userShortUrls = _repo.GetUserShortUrlCodes(userId); 
+                return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(userShortUrls));
             }
             else{
                 return NotFound(new { Message = "User not found."} );

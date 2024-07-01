@@ -15,6 +15,7 @@ namespace ShortUrlService.Controller
             _shortUrlRepository = shortUrlRepository;
         }
 
+        // Auth test as well
         [HttpGet]
         public ActionResult GetAllShortUrls()
         {
@@ -43,9 +44,15 @@ namespace ShortUrlService.Controller
                 {
                     string aliasCode = "";
                     if (!string.IsNullOrEmpty(alias)){
-                        var shortUrlWithAlias = _shortUrlRepository.GetShortUrlWithCode(alias);
-                        aliasCode = shortUrlWithAlias == null ? _shortUrlRepository.AddShortUrl(url, alias):shortUrlWithAlias.Code;
-                        _shortUrlRepository.SaveChanges();
+                        if (alias.Length <= 12)
+                        {
+                            var shortUrlWithAlias = _shortUrlRepository.GetShortUrlWithCode(alias);
+                            aliasCode = shortUrlWithAlias == null ? _shortUrlRepository.AddShortUrl(url, alias):shortUrlWithAlias.Code;
+                            _shortUrlRepository.SaveChanges();
+                        }
+                        else{
+                            return BadRequest(new { Message = "Make sure the alias is at most 12 characters." });
+                        }
                     }
 
                     ShortUrl shortUrl = _shortUrlRepository.GetShortUrlWithDestination(url);

@@ -64,6 +64,11 @@ namespace UserShortUrlService.Data.Repository
             return _db.UserShortUrls.Include(usrc => usrc.User);
         }
 
+        public IEnumerable<UserShortUrl> GetUserShortUrlCodes(string userId)
+        {
+            return _db.UserShortUrls.Include(usrc => usrc.User).Where(usrc => usrc.UserId == userId);
+        }
+
         public bool SaveChanges()
         {
             return _db.SaveChanges() >= 0;

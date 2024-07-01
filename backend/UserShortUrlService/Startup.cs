@@ -11,6 +11,9 @@ using UserShortUrlService.AsyncDataServices;
 using UserShortUrlService;
 using UserShortUrlService.SyncDataServices.Grpc;
 using UserShortUrlService.SyncDataServices.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 public class Startup
 {
     public IConfiguration Configuration { get; set; }
@@ -34,6 +37,23 @@ public class Startup
         services.AddHostedService<RabbitMQSubscriber>();
         services.AddScoped<IUserDataClient, UserDataClient>();
         services.AddHttpClient<IShortUrlDataClient, HttpShortUrlDataClient>();
+        services.AddAuthentication(opt => {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(opt => {
+            opt.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = Configuration["Jwt:Issuer"],
+                ValidAudience = Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]))
+            };
+        });
+        services.AddAuthorization();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,10 +66,14 @@ public class Startup
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PlatformService"));
         }
 
+        // Note, authentication has to come before authorization
+        app.UseAuthentication();
         app.UseRouting();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapGet("/security/test", () => "Accessed").RequireAuthorization(); // test token auth
             endpoints.MapControllers();
         });
         

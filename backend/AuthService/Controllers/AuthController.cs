@@ -51,12 +51,14 @@ namespace AuthService.Controllers
             var user = _userManager.FindUserWithEmail(loginRequest.Email);
             if (user == null || !_userManager.IsPasswordValid(user, loginRequest.Password)) return BadRequest("Invalid login");
 
-            string secretKey = _configuration["SecretKey"];
+            string secretKey = _configuration["Jwt:Secret"];
             JwtSecurityTokenHandler tokenHandler = new();
             byte[] key = Encoding.ASCII.GetBytes(secretKey);
 
             SecurityTokenDescriptor descriptor = new()
             {
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("id", user.UserId),

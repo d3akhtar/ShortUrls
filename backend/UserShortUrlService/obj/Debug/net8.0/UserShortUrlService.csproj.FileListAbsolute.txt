@@ -148,3 +148,4 @@ C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.Net.Client.dll
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.Net.ClientFactory.dll
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.Net.Common.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
