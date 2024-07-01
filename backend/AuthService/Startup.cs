@@ -1,4 +1,5 @@
 
+using AuthService.AsyncDataServices;
 using AuthService.Data;
 using AuthService.Data.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +27,7 @@ public class Startup
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Users"));
         services.AddScoped<IUserManager, UserManager>();
+        services.AddSingleton<IRabbitMqClient, RabbitMqClient>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

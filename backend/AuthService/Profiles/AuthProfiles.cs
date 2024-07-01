@@ -12,6 +12,7 @@ namespace AuthService.Profiles
         public AuthProfiles()
         {
             CreateMap<User, UserReadDTO>();
+            CreateMap<User, UserPublishDTO>();
             CreateMap<RegisterRequestDTO, User>()
             .ForMember(dest => dest.HashedPassword, opt => opt.ConvertUsing(new PasswordConverter(), src => src.Password));
         }

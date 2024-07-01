@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
+using AuthService.AsyncDataServices;
 using AuthService.Data.Repository;
 using AuthService.DTO;
 using AuthService.Model;
@@ -20,12 +21,20 @@ namespace AuthService.Controllers
         private readonly IMapper _mapper;
         private readonly IUserManager _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IRabbitMqClient _rabbitMqClient;
 
-        public AuthController(IMapper mapper, IUserManager userManager, IConfiguration configuration)
+        public AuthController
+        (
+            IMapper mapper, 
+            IUserManager userManager, 
+            IConfiguration configuration,
+            IRabbitMqClient rabbitMqClient
+        )
         {
             _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
+            _rabbitMqClient = rabbitMqClient;
         }
 
         // for testing
@@ -79,6 +88,8 @@ namespace AuthService.Controllers
                     
                     _userManager.AddUser(user);
                     _userManager.SaveChanges();
+                    
+                    _rabbitMqClient.PublishNewUser(_mapper.Map<UserPublishDTO>(user));
                     
                     return Ok(new { Message = "Registration complete!", User = _mapper.Map<UserReadDTO>(user) });
                 }
