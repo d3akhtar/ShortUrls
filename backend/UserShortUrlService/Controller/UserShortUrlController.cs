@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserShortUrlService.Data.Repository;
 using UserShortUrlService.DTO;
@@ -21,6 +22,7 @@ namespace UserShortUrlService.Controller
         }
 
         // for testing
+        [Authorize]
         [HttpGet("users")]
         public ActionResult<IEnumerable<User>> GetAllUsers()
         {

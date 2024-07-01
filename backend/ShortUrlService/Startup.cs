@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 public class Startup
 {
     public IConfiguration Configuration { get; set; }
@@ -25,7 +26,29 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(opt => {
+            opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+            opt.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("ShortUrls"));
         services.AddScoped<IShortUrlRepository, ShortUrlRepository>();

@@ -1,6 +1,7 @@
 using AuthService;
 using AutoMapper;
 using Grpc.Net.Client;
+using Microsoft.AspNetCore.Authorization;
 using UserShortUrlService.Model;
 
 namespace UserShortUrlService.SyncDataServices.Grpc
@@ -15,6 +16,8 @@ namespace UserShortUrlService.SyncDataServices.Grpc
             _configuration = configuration;
             _mapper = mapper;
         }
+
+        [Authorize]
         public IEnumerable<User> ReturnAllUsers()
         {
             var channel = GrpcChannel.ForAddress(_configuration["GrpcUserService"]);
