@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShortUrlService.Data.Repository;
 using ShortUrlService.Model;
@@ -15,7 +16,7 @@ namespace ShortUrlService.Controller
             _shortUrlRepository = shortUrlRepository;
         }
 
-        // Auth test as well
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult GetAllShortUrls()
         {
@@ -83,6 +84,7 @@ namespace ShortUrlService.Controller
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{code}")]
         public ActionResult DeleteShortUrl(string code)
         {
@@ -108,6 +110,7 @@ namespace ShortUrlService.Controller
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{code}")]
         public ActionResult UpdateShortUrlDestiantion(string code, [FromQuery]string newDestinationUrl)
         {
