@@ -15,6 +15,13 @@ namespace UserShortUrlService.Controller
             _repo = repo;
         }
 
+        // for testing
+        [HttpGet("user")]
+        public ActionResult<IEnumerable<User>> GetAllUsers()
+        {
+            return Ok(_repo.GetAllUsers());
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<UserShortUrlCode>> GetAllUserUrlCodes()
         {

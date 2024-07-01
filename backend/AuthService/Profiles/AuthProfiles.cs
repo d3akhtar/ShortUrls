@@ -13,6 +13,7 @@ namespace AuthService.Profiles
         {
             CreateMap<User, UserReadDTO>();
             CreateMap<User, UserPublishDTO>();
+            CreateMap<User, GrpcUserModel>();
             CreateMap<RegisterRequestDTO, User>()
             .ForMember(dest => dest.HashedPassword, opt => opt.ConvertUsing(new PasswordConverter(), src => src.Password));
         }

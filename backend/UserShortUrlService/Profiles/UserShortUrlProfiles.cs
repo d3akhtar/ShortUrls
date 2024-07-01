@@ -8,7 +8,7 @@ namespace UserShortUrlService.Profiles
     {
         public UserShortUrlProfiles()
         {
-            //CreateMap<User, UserReadDTO>();
+            CreateMap<UserPublishedDTO, User>();
         }
     }
 }

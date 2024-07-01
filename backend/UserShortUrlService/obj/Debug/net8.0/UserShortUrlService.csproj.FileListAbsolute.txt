@@ -139,3 +139,5 @@ C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\obj\Debug
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\obj\Debug\net8.0\UserShortUrlService.pdb
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\obj\Debug\net8.0\UserShortUrlService.genruntimeconfig.cache
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\obj\Debug\net8.0\ref\UserShortUrlService.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\RabbitMQ.Client.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\appsettings.Production.json

@@ -1,6 +1,6 @@
 namespace UserShortUrlService.DTO
 {
-    public class UserReadDTO
+    public class UserPublishedDTO
     {
         public string UserId { get; set; }
         public string Email { get; set; }
