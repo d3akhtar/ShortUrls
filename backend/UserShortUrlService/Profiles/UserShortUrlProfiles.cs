@@ -10,6 +10,8 @@ namespace UserShortUrlService.Profiles
         public UserShortUrlProfiles()
         {
             CreateMap<UserPublishedDTO, User>();
+            CreateMap<User, UserReadDTO>();
+            CreateMap<UserShortUrl, UserShortUrlReadDTO>();
             CreateMap<GrpcUserModel, User>();
         }
     }

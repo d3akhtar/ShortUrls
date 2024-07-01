@@ -7,7 +7,7 @@ namespace UserShortUrlService.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
 
-        public DbSet<UserShortUrlCode> UserShortUrlCodes { get; set; }
+        public DbSet<UserShortUrl> UserShortUrls { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }

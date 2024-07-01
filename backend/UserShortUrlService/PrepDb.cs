@@ -6,7 +6,7 @@ namespace UserShortUrlService
 {
     public static class PrepDb
     {
-        public static async void PrepPopulation(IApplicationBuilder app)
+        public static void PrepPopulation(IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -23,7 +23,7 @@ namespace UserShortUrlService
 
                     db.SaveChanges();
 
-                    // Testing http client
+                    // Testing http client, assuming at least one url is mapped
                     /* 
                     var shortUrlDataClient = scope.ServiceProvider.GetRequiredService<IShortUrlDataClient>();
                     if (await shortUrlDataClient.IsShortUrlMapped("1WEC6JN")){ // first code is always this
