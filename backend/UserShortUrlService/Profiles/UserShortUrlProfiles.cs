@@ -1,3 +1,4 @@
+using AuthService;
 using AutoMapper;
 using UserShortUrlService.DTO;
 using UserShortUrlService.Model;
@@ -9,6 +10,7 @@ namespace UserShortUrlService.Profiles
         public UserShortUrlProfiles()
         {
             CreateMap<UserPublishedDTO, User>();
+            CreateMap<GrpcUserModel, User>();
         }
     }
 }

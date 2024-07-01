@@ -16,7 +16,7 @@ namespace UserShortUrlService.Controller
         }
 
         // for testing
-        [HttpGet("user")]
+        [HttpGet("users")]
         public ActionResult<IEnumerable<User>> GetAllUsers()
         {
             return Ok(_repo.GetAllUsers());

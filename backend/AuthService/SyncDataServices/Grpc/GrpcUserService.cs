@@ -18,6 +18,7 @@ namespace AuthService.SyncDataServices.Grpc
 
         public override Task<UserResponse> GetAllUsers(GetAllUsersRequest getAllUsersRequest, ServerCallContext serverCallContext)
         {
+            Console.WriteLine("--> Grpc call received, getting all users...");
             var response = new UserResponse();
             var users = _userManager.GetAllUsers();
 

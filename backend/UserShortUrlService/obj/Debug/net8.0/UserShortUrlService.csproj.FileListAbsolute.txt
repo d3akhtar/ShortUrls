@@ -141,3 +141,10 @@ C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\obj\Debug
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\obj\Debug\net8.0\ref\UserShortUrlService.dll
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\RabbitMQ.Client.dll
 C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\appsettings.Production.json
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Google.Protobuf.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.AspNetCore.Server.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.AspNetCore.Server.ClientFactory.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.Core.Api.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.Net.Client.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.Net.ClientFactory.dll
+C:\Users\Danyal\Documents\dotnet\ShortUrls\backend\UserShortUrlService\bin\Debug\net8.0\Grpc.Net.Common.dll

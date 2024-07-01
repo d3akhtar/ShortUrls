@@ -20,7 +20,8 @@ namespace PlatformService
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseUrls("https://localhost:7029", "http://localhost:5227");
                 });
     }
 }

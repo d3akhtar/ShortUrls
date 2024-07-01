@@ -2,6 +2,7 @@
 using AuthService.AsyncDataServices;
 using AuthService.Data;
 using AuthService.Data.Repository;
+using AuthService.SyncDataServices.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,11 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapGrpcService<GrpcUserService>();
+            endpoints.MapGet("/protos/users.proto", async context => 
+            {
+                await context.Response.WriteAsync(File.ReadAllText("Protos/users.proto")); 
+            }); // see users.proto file
         });
     }
 }
