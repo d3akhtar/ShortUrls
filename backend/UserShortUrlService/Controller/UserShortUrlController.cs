@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +24,14 @@ namespace UserShortUrlService.Controller
         }
 
         // for testing
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpGet("users")]
         public ActionResult<IEnumerable<User>> GetAllUsers()
         {
             return Ok(_repo.GetAllUsers());
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult<IEnumerable<UserShortUrl>> GetAllUserUrlCodes()
         {
@@ -36,39 +39,118 @@ namespace UserShortUrlService.Controller
             return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(allUserShortUrls));
         }
 
-        [HttpPost("{userId}")]
-        public async Task<ActionResult> AddUrlCodeToUser(string userId, List<string> codes)
+        [HttpPost("shorturls")]
+        public async Task<ActionResult> AddUrlCodeToUser(List<string> codes)
         {
-            if (_repo.DoesUserWithIdExist(userId)){
-                var addedUserShortUrlCodes = await _repo.AddUserShortUrls(userId, codes);
-                _repo.SaveChanges();
+            try{
+                var userId = GetUserIdFromHttpRequest(HttpContext.Request);
+                if (_repo.DoesUserWithIdExist(userId)){
+                    var addedUserShortUrlCodes = await _repo.AddUserShortUrls(userId, codes);
+                    _repo.SaveChanges();
 
-                if (addedUserShortUrlCodes.Count() > 0){
-                    return Ok(new 
-                    { 
-                        Message = $"Added short urls for user with id: {userId}", 
-                        AddedShortUrls = _mapper.Map<IEnumerable<UserShortUrlReadDTO>>(addedUserShortUrlCodes)
-                    });
+                    if (addedUserShortUrlCodes.Count() > 0){
+                        return Ok(new 
+                        { 
+                            Message = $"Added short urls for user with id: {userId}", 
+                            AddedShortUrls = _mapper.Map<IEnumerable<UserShortUrlReadDTO>>(addedUserShortUrlCodes)
+                        });
+                    }
+                    else{
+                        return BadRequest(new { Message = "No short urls were added for this user, maybe they were already added or they don't exist."});
+                    }
                 }
                 else{
-                    return BadRequest(new { Message = "No short urls were added for this user, maybe they were already added or they don't exist."});
+                    return NotFound(new { Message = "User not found."} );
                 }
             }
-            else{
-                return NotFound(new { Message = "User not found."} );
+            catch(ArgumentException ex){
+                Console.WriteLine(ex.Message);
+                return BadRequest(new { Message = "Error while getting userId from token"});
+            }
+            catch(Exception ex){
+                Console.WriteLine("Unexpected error occured: " + ex.Message);
+                return BadRequest(new { Message = "Error while getting userId from token"});
             }
         }
 
-        [HttpGet("{userId}")]
-        public ActionResult<UserShortUrlReadDTO> GetShortUrlsForUser(string userId)
+        [Authorize]
+        [HttpGet("shorturls")]
+        public ActionResult<UserShortUrlReadDTO> GetShortUrlsForUser()
         {
-            if (_repo.DoesUserWithIdExist(userId)){
-                var userShortUrls = _repo.GetUserShortUrlCodes(userId); 
-                return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(userShortUrls));
+            try{
+                var userId = GetUserIdFromHttpRequest(HttpContext.Request);
+                if (_repo.DoesUserWithIdExist(userId)){
+                    var userShortUrls = _repo.GetUserShortUrlCodes(userId); 
+                    return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(userShortUrls));
+                }
+                else{
+                    return NotFound(new { Message = "User not found."} );
+                }
+            }
+            catch(ArgumentException ex){
+                Console.WriteLine(ex.Message);
+                return BadRequest(new { Message = "Error while getting userId from token"});
+            }
+            catch(Exception ex){
+                Console.WriteLine("Unexpected error occured: " + ex.Message);
+                return BadRequest(new { Message = "Error while getting userId from token"});
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("shorturls")]
+        public ActionResult<UserShortUrlReadDTO> DeleteShortUrlsForUser([FromQuery]string code)
+        {
+            try{
+                var userId = GetUserIdFromHttpRequest(HttpContext.Request);
+                if (_repo.DoesUserWithIdExist(userId) && _repo.DoesUserShortUrlExist(userId, code)){
+                    var userShortUrl = _repo.DeleteUserShortUrl(userId, code);
+                    return Ok(new 
+                    {
+                        Message = "ShortUrl for user was successfully deleted!",
+                        DeletedUserShortUrl = _mapper.Map<UserShortUrlReadDTO>(userShortUrl)
+                    });
+                }
+                else{
+                    return NotFound(new { Message = "User or ShortUrl not found."} );
+                }
+            }
+            catch(ArgumentException ex){
+                Console.WriteLine(ex.Message);
+                return BadRequest(new { Message = "Error while getting userId from token"});
+            }
+            catch(Exception ex){
+                Console.WriteLine("Unexpected error occured: " + ex.Message);
+                return BadRequest(new { Message = "Error while getting userId from token"});
+            }
+        }
+
+        private static string GetUserIdFromHttpRequest(HttpRequest request){
+            var tokenString = GetJwtTokenFromHttpRequest(request);
+            if (tokenString == null) throw new ArgumentException("Error occured while decoding token.");
+            var jwtPayload = GetJwtPayloadFromTokenString(tokenString);
+            if (jwtPayload.TryGetValue("userId", out var userId)){
+                return userId.ToString();
             }
             else{
-                return NotFound(new { Message = "User not found."} );
+                throw new ArgumentException("Error occured while decoding token.");
             }
+        }
+        private static string GetJwtTokenFromHttpRequest(HttpRequest request){
+            if(request.Headers.TryGetValue("Authorization", out var headerAuth)){
+                return headerAuth.ToString().Split("Bearer ")[1];
+            }
+            else{
+                return null;
+            }
+        }
+
+        private static JwtPayload GetJwtPayloadFromTokenString(string tokenString){
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(tokenString);
+            
+            Console.WriteLine("token payload being returned: " + token.Payload.SerializeToJson());
+            return token.Payload;
         }
     }
 }

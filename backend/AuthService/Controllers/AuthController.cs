@@ -61,7 +61,7 @@ namespace AuthService.Controllers
                 Audience = _configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("id", user.UserId),
+                    new Claim("userId", user.UserId),
                     new Claim("email", user.Email),
                     new Claim("username", user.Username),
                     new Claim("role", user.Role),

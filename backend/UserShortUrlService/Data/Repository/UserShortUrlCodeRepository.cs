@@ -49,6 +49,18 @@ namespace UserShortUrlService.Data.Repository
             return addedUserShortUrls;
         }
 
+        public UserShortUrl DeleteUserShortUrl(string userId, string code)
+        {
+            UserShortUrl userShortUrl = _db.UserShortUrls.First(usrc => usrc.UserId == userId && usrc.ShortUrlCode == code);
+            _db.UserShortUrls.Remove(userShortUrl);
+            return userShortUrl;
+        }
+
+        public bool DoesUserShortUrlExist(string userId, string code)
+        {
+            return _db.UserShortUrls.FirstOrDefault(usrc => usrc.UserId == userId && usrc.ShortUrlCode == code) != null;
+        }
+
         public bool DoesUserWithIdExist(string userId)
         {
             return _db.Users.FirstOrDefault(u => u.UserId == userId) != null;

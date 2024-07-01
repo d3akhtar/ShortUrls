@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UserShortUrlService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a08a77a750afe911a565d33a34196c844eb46cac")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c014c56a71abb33a3bf66a9f8be5eab3f5656e22")]
 [assembly: System.Reflection.AssemblyProductAttribute("UserShortUrlService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UserShortUrlService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
