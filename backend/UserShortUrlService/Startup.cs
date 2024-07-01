@@ -26,6 +26,7 @@ public class Startup
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("UserShortUrlCodes"));
         services.AddScoped<IUserShortUrlCodeRepository, UserShortUrlCodeRepository>();
+        services.AddHostedService<RabbitMQSubscriber>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
