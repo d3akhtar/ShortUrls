@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using ShortUrlService.AsyncDataServices;
+
 namespace ShortUrlService.Helper.Counter
 {
     public static class Counter
@@ -5,13 +8,17 @@ namespace ShortUrlService.Helper.Counter
         public static int CurrentNumber { get; set; } = 1;
         public static int Limit { get; set; } = 100;
 
-        public static void IncrementCounter()
+        public async static Task SetCounterRange(ICounterRangeRpcClient counterRangeRpcClient)
+        {
+            var counterRangeResponse = await counterRangeRpcClient.GetNextCounterRange();
+            CurrentNumber = counterRangeResponse.Start;
+            Limit = counterRangeResponse.Max;
+        }
+
+        public async static Task IncrementCounter(ICounterRangeRpcClient counterRangeRpcClient)
         {
             CurrentNumber++;
-            if (CurrentNumber >= Limit)
-            {
-                Limit += 100; // later on, we will reset current nuber and limit based on message queue
-            }
+            if (CurrentNumber > Limit) await SetCounterRange(counterRangeRpcClient);
         }
     }
 }

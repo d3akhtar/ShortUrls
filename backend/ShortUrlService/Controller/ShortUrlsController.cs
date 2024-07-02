@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShortUrlService.AsyncDataServices;
 using ShortUrlService.Data.Repository;
 using ShortUrlService.Model;
 
@@ -36,7 +37,7 @@ namespace ShortUrlService.Controller
         }
 
         [HttpPost]
-        public ActionResult CreateNewShortUrl(string url, string alias="")
+        public async Task<ActionResult> CreateNewShortUrl(string url, string alias="")
         {
             string baseUrl = GetBaseUrlWithRequest(HttpContext.Request);
             try
@@ -48,7 +49,7 @@ namespace ShortUrlService.Controller
                         if (alias.Length <= 12)
                         {
                             var shortUrlWithAlias = _shortUrlRepository.GetShortUrlWithCode(alias);
-                            aliasCode = shortUrlWithAlias == null ? _shortUrlRepository.AddShortUrl(url, alias):shortUrlWithAlias.Code;
+                            aliasCode = shortUrlWithAlias == null ? await _shortUrlRepository.AddShortUrl(url, alias):shortUrlWithAlias.Code;
                             _shortUrlRepository.SaveChanges();
                         }
                         else{
@@ -65,7 +66,7 @@ namespace ShortUrlService.Controller
                             Ok(new { ShortenedUrl = baseUrl + shortUrl.Code, ShortenedUrlWithAlias = baseUrl + aliasCode });
                     }
 
-                    string code = _shortUrlRepository.AddShortUrl(url);
+                    string code = await _shortUrlRepository.AddShortUrl(url);
 
                     _shortUrlRepository.SaveChanges();
                     return string.IsNullOrEmpty(aliasCode) ? 
@@ -143,7 +144,7 @@ namespace ShortUrlService.Controller
 
         private string GetBaseUrlWithRequest(HttpRequest request)
         {
-            Console.WriteLine($"BaseUrl: {request.Scheme}://{request.Host}:{request.Path}/");
+            Console.WriteLine($"BaseUrl: {request.Scheme}://{request.Host}{request.Path}/");
             return $"{request.Scheme}://{request.Host}{request.Path}/";
         }
     }

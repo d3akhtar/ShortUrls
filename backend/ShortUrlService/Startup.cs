@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using ShortUrlService.AsyncDataServices;
+using System.Diagnostics.Metrics;
+using ShortUrlService.Helper.Counter;
 public class Startup
 {
     public IConfiguration Configuration { get; set; }
@@ -69,10 +72,11 @@ public class Startup
             };
         });
         services.AddAuthorization();
+        services.AddSingleton<ICounterRangeRpcClient, CounterRangeRpcClient>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
@@ -91,5 +95,10 @@ public class Startup
             endpoints.MapGet("/security/test", () => "Accessed").RequireAuthorization(); // test token auth
             endpoints.MapControllers();
         });
+
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            await Counter.SetCounterRange(scope.ServiceProvider.GetRequiredService<ICounterRangeRpcClient>());
+        }
     }
 }

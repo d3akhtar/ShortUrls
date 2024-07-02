@@ -1,3 +1,4 @@
+using ShortUrlService.AsyncDataServices;
 using ShortUrlService.Data;
 using ShortUrlService.Helper.Counter;
 using ShortUrlService.Model;
@@ -7,15 +8,17 @@ namespace ShortUrlService.Data.Repository
     public class ShortUrlRepository : IShortUrlRepository
     {
         private readonly AppDbContext _db;
+        private readonly ICounterRangeRpcClient _counterRangeRpcClient;
 
-        public ShortUrlRepository(AppDbContext db)
+        public ShortUrlRepository(AppDbContext db, ICounterRangeRpcClient counterRangeRpcClient)
         {
             _db = db;
+            _counterRangeRpcClient = counterRangeRpcClient;
         }
-        public string AddShortUrl(string destinationUrl, string alias = "")
+        public async Task<string> AddShortUrl(string destinationUrl, string alias = "")
         {
             int currentCount = Counter.CurrentNumber;
-            if (string.IsNullOrEmpty(alias)) Counter.IncrementCounter();
+            if (string.IsNullOrEmpty(alias)) await Counter.IncrementCounter(_counterRangeRpcClient);
             
             Console.WriteLine("Proceeding to Base62Encode number: " + currentCount);
 

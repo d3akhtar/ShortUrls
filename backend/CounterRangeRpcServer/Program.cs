@@ -6,20 +6,19 @@ using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-var envname = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+string envname = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
 
 Console.WriteLine("envname: " + envname);
 
 // configuration to let us use appsettings.json
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory()) // start looking for these files here
-    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .AddJsonFile($"appsettings.{envname}.json", optional: true, reloadOnChange: true);
 
 
 IConfiguration config = builder.Build();
 
-Console.WriteLine("Host: " + config["RabbitMQHost"] + ", Port: " + config["RabbitMQPOrt"]);
+Console.WriteLine("Host: " + config["RabbitMQHost"] + ", Port: " + config["RabbitMQPort"]);
 
 
 // Connect to message queue, and initialize counter

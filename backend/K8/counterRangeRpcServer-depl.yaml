@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counterRangeRpcServer-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: counterRangeRpcServerService
+  template:
+    metadata:
+      labels:
+        app: counterRangeRpcServerService
+    spec:
+      containers:
+      - name: counterRangeRpcServerService
+        image: d3akhtar/counterrangerpcserver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: counterRangeRpcServer-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: counterRangeRpcServerService
+  ports:
+  - name: counterRangeRpcServerService
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
