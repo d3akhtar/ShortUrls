@@ -55,7 +55,13 @@ public class Startup
             });
         });
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("UserShortUrlCodes"));
+        // if (_env.IsDevelopment()){
+        //     services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("UserShortUrlCodes"));
+        // }
+        // else{
+        //     services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+        // }
+        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
         services.AddScoped<IUserShortUrlCodeRepository, UserShortUrlCodeRepository>();
         services.AddHostedService<RabbitMQSubscriber>();
         services.AddScoped<IUserDataClient, UserDataClient>();
@@ -99,6 +105,19 @@ public class Startup
             endpoints.MapGet("/security/test", () => "Accessed").RequireAuthorization(); // test token auth
             endpoints.MapControllers();
         });
+
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetService<AppDbContext>();
+
+            try{
+                //if (_env.IsProduction())
+                    db.Database.Migrate();
+            }
+            catch(Exception ex){
+                Console.WriteLine("--> Error while applying migrations for usershorturl db: " + ex.Message);
+            }
+        }
         
         PrepDb.PrepPopulation(app);
     }

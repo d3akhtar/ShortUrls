@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-usershorturl-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-usershorturl
+  template:
+    metadata:
+      labels:
+        app: mssql-usershorturl
+    spec:
+      containers:
+        - name: mssql-usershorturl
+          image: mcr.microsoft.com/mssql/server:2017-latest
+          ports:
+            - containerPort: 1433
+          env:
+            - name: MSSQL_PID
+              value: "Express"
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql
+                  key: SA_PASSWORD
+          volumeMounts:
+            - mountPath: /var/opt/mssql/data
+              name: mssqldb-usershorturl
+      volumes: 
+        - name: mssqldb-usershorturl
+          persistentVolumeClaim:
+            claimName: mssql-usershorturl-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-usershorturl-clusterip-srv
+spec:
+  type: ClusterIP
+  selector: 
+    app: mssql-usershorturl
+  ports:
+    - name: mssql-usershorturl
+      protocol: TCP
+      port: 1433
+      targetPort: 1433
+--- 
+# load balancer service, will allow us to directly access db from our desktop
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-usershorturl-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: mssql-usershorturl
+  ports:
+  - protocol: TCP
+    port: 1435
+    targetPort: 1433

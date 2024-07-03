@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using ShortUrlService.AsyncDataServices;
 using System.Diagnostics.Metrics;
 using ShortUrlService.Helper.Counter;
+using Azure.Core;
 public class Startup
 {
     public IConfiguration Configuration { get; set; }
@@ -53,7 +54,13 @@ public class Startup
             });
         });
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("ShortUrls"));
+        // if (_env.IsDevelopment()){
+        //     services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("ShortUrls"));
+        // }
+        // else{
+        //     services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+        // }
+        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
         services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
         services.AddAuthentication(opt => {
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -82,7 +89,7 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PlatformService"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShortUrlService"));
         }
         
         // Note, authentication has to come before authorization
@@ -99,6 +106,16 @@ public class Startup
         using (var scope = app.ApplicationServices.CreateScope())
         {
             await Counter.SetCounterRange(scope.ServiceProvider.GetRequiredService<ICounterRangeRpcClient>());
+
+            var db = scope.ServiceProvider.GetService<AppDbContext>();
+
+            try{
+                //if (_env.IsProduction())
+                    db.Database.Migrate();
+            }
+            catch(Exception ex){
+                Console.WriteLine("--> Error while applying migrations for shorturl db: " + ex.Message);
+            }
         }
     }
 }

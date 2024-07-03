@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql-auth
+  template:
+    metadata:
+      labels:
+        app: mssql-auth
+    spec:
+      containers:
+        - name: mssql-auth
+          image: mcr.microsoft.com/mssql/server:2017-latest
+          ports:
+            - containerPort: 1433
+          env:
+            - name: MSSQL_PID
+              value: "Express"
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssql
+                  key: SA_PASSWORD
+          volumeMounts:
+            - mountPath: /var/opt/mssql/data
+              name: mssqldb-auth
+      volumes: 
+        - name: mssqldb-auth
+          persistentVolumeClaim:
+            claimName: mssql-auth-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-auth-clusterip-srv
+spec:
+  type: ClusterIP
+  selector: 
+    app: mssql-auth
+  ports:
+    - name: mssql-auth
+      protocol: TCP
+      port: 1433
+      targetPort: 1433
+--- 
+# load balancer service, will allow us to directly access db from our desktop
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-auth-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: mssql-auth
+  ports:
+  - protocol: TCP
+    port: 1434
+    targetPort: 1433

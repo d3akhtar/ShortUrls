@@ -19,6 +19,7 @@ namespace AuthService.Data.Repository
                 throw new NullReferenceException();
             }
 
+            user.Role = "user";
             _db.Add(user);
         }
 

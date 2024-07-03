@@ -145,7 +145,7 @@ namespace ShortUrlService.Controller
         private string GetBaseUrlWithRequest(HttpRequest request)
         {
             Console.WriteLine($"BaseUrl: {request.Scheme}://{request.Host}{request.Path}/");
-            return $"{request.Scheme}://{request.Host}{request.Path}/";
+            return $"{request.Scheme}://{request.Host}{request.Path.ToString().TrimEnd('/')}/";
         }
     }
 }

@@ -50,9 +50,11 @@ consumer.Received += (model, ea) => {
         response = JsonSerializer.Serialize(new 
         {
             Start = count,
-            Max = count + 1
+            Max = count + (100000 - 1)
         });
-        count += 2;
+        count += 100000;
+
+        Console.WriteLine("--> Sending response: " + response);
     }
     catch(Exception ex){
         Console.WriteLine("--> Error while processing RPC request, error: " + ex.Message);
