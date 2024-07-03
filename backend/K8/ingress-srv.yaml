@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-reges: 'true'
+spec:
+  rules:
+    - host: ShortUrl.com
+      http:
+        paths:
+          - path: /api/auth
+            pathType: prefix
+            backend:
+              service:
+                name: auth-clusterip-srv
+                port:
+                  number: 8080
+          - path: /api/shorturl
+            pathType: prefix
+            backend:
+              service:
+                name: shorturl-clusterip-srv
+                port:
+                  number: 8080
+          - path: /api/user
+            pathType: prefix
+            backend:
+              service:
+                name: usershorturl-clusterip-srv
+                port:
+                  number: 8080

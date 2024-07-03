@@ -29,3 +29,22 @@ spec:
     protocol: TCP
     port: 8080
     targetPort: 8080
+
+--- # these dashes separate deployment from cluster ip, can also define these in another file
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: authservice
+  ports:
+    - name: authservice
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: authgrpc
+      protocol: TCP
+      port: 777
+      targetPort: 777

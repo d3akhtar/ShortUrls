@@ -7,7 +7,7 @@ using ShortUrlService.Model;
 namespace ShortUrlService.Controller
 {
     [ApiController]
-    [Route("/api/shorturl")]
+    [Route("api/shorturl")]
     public class ShortUrlsController : ControllerBase
     {
         private readonly IShortUrlRepository _shortUrlRepository;

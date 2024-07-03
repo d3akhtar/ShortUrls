@@ -11,7 +11,7 @@ using UserShortUrlService.SyncDataServices.Http;
 namespace UserShortUrlService.Controller
 {
     [ApiController]
-    [Route("/api/user")]
+    [Route("api/user")]
     public class UserShortUrlController : ControllerBase
     {
         private readonly IUserShortUrlCodeRepository _repo;

@@ -2,9 +2,13 @@
 using System.IO.Pipes;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+
+
+CancellationTokenSource Cts = new();
 
 string envname = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
 
@@ -30,8 +34,6 @@ channel.QueueDeclare(queue: "get_next_counter_range_queue", durable: false, excl
 channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 var consumer = new EventingBasicConsumer(channel);
 channel.BasicConsume(queue: "get_next_counter_range_queue", autoAck: false, consumer: consumer);
-
-Console.WriteLine("--> Awaiting RPC requests");
 
 consumer.Received += (model, ea) => {
     Console.WriteLine("--> Received RPC request");
@@ -62,5 +64,6 @@ consumer.Received += (model, ea) => {
     }
 };
 
-Console.WriteLine("--> x Press enter to exit");
-Console.ReadLine();
+Console.WriteLine("--> Awaiting RPC requests");
+
+await Task.Delay(Timeout.Infinite, Cts.Token).ConfigureAwait(false);
