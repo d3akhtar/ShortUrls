@@ -1,2 +1,27 @@
 appSettings.*
 .DS_STORE
+
+# ui stuff
+# dependencies
+*node_modules*
+ui/urlshortener/.pnp
+ui/urlshortener/.pnp.js
+
+# testing
+ui/urlshortener/coverage
+
+# production
+ui/urlshortener/build
+
+# misc
+ui/urlshortener/.DS_Store
+ui/urlshortener/.env.local
+ui/urlshortener/.env.development.local
+ui/urlshortener/.env.test.local
+ui/urlshortener/.env.production.local
+
+ui/urlshortener/npm-debug.log*
+ui/urlshortener/yarn-debug.log*
+ui/urlshortener/yarn-error.log*
+
+.vs/*

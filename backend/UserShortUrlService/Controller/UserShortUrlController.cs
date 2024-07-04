@@ -106,6 +106,7 @@ namespace UserShortUrlService.Controller
                 var userId = GetUserIdFromHttpRequest(HttpContext.Request);
                 if (_repo.DoesUserWithIdExist(userId) && _repo.DoesUserShortUrlExist(userId, code)){
                     var userShortUrl = _repo.DeleteUserShortUrl(userId, code);
+                    _repo.SaveChanges();
                     return Ok(new 
                     {
                         Message = "ShortUrl for user was successfully deleted!",
