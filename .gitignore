@@ -1,6 +1,8 @@
 appSettings.*
 .DS_STORE
 
+*helperScripts*
+
 # ui stuff
 # dependencies
 *node_modules*
