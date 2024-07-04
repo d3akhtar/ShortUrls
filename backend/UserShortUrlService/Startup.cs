@@ -83,6 +83,7 @@ public class Startup
             };
         });
         services.AddAuthorization();
+        services.AddCors();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,7 +95,9 @@ public class Startup
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PlatformService"));
         }
-
+        
+        app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
+        
         // Note, authentication has to come before authorization
         app.UseAuthentication();
         app.UseRouting();
@@ -105,6 +108,8 @@ public class Startup
             endpoints.MapGet("/security/test", () => "Accessed").RequireAuthorization(); // test token auth
             endpoints.MapControllers();
         });
+
+        
 
         using (var scope = app.ApplicationServices.CreateScope())
         {

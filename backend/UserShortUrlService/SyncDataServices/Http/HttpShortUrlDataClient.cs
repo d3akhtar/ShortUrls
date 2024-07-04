@@ -1,4 +1,5 @@
 using System.Text.Json;
+using UserShortUrlService.DTO;
 
 namespace UserShortUrlService.SyncDataServices.Http
 {
@@ -12,17 +13,24 @@ namespace UserShortUrlService.SyncDataServices.Http
             _configuration = configuration;
             _httpclient = httpClient;
         }
-        public async Task<bool> IsShortUrlMapped(string code)
+        public async Task<ShortUrlHttpResponseDTO> RequestForShortUrl(string code)
         {
             Console.WriteLine("--> Using HTTP Client to check if ShortUrl with code " + code + " exists");
             try{
-                var response = await _httpclient.GetAsync(_configuration["HttpShortUrlService"] + code);
+                var response = await _httpclient.GetAsync(_configuration["HttpShortUrlService"] + code + "?avoidRedirection=true");
 
-                return response.StatusCode != System.Net.HttpStatusCode.NotFound;
+                if(response.StatusCode != System.Net.HttpStatusCode.NotFound){
+                    var responseBody = await response.Content.ReadFromJsonAsync<ShortUrlHttpResponseDTO>();
+                    Console.WriteLine("responseBody: " + responseBody);
+                    return responseBody;
+                }
+                else{
+                    return null;
+                }
             }
             catch(Exception ex){
-                Console.WriteLine("--> Error while using HTTP Client to check if ShortUrl with code " + code + " exists, error: " + ex.Message);
-                return false;
+                Console.WriteLine("--> Unexpected error while using HTTP Client to check if ShortUrl with code " + code + " exists, error: " + ex.Message);
+                return null;
             }
         }
     }

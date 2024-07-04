@@ -39,6 +39,7 @@ namespace UserShortUrlService.Controller
             return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(allUserShortUrls));
         }
 
+        [Authorize]
         [HttpPost("shorturls")]
         public async Task<ActionResult> AddUrlCodeToUser(List<string> codes)
         {
@@ -69,7 +70,7 @@ namespace UserShortUrlService.Controller
             }
             catch(Exception ex){
                 Console.WriteLine("Unexpected error occured: " + ex.Message);
-                return BadRequest(new { Message = "Error while getting userId from token"});
+                return BadRequest(new { Message = "Unexpected error occured."});
             }
         }
 
@@ -127,6 +128,7 @@ namespace UserShortUrlService.Controller
 
         private static string GetUserIdFromHttpRequest(HttpRequest request){
             var tokenString = GetJwtTokenFromHttpRequest(request);
+            Console.WriteLine("tokenString: " + tokenString);
             if (tokenString == null) throw new ArgumentException("Error occured while decoding token.");
             var jwtPayload = GetJwtPayloadFromTokenString(tokenString);
             if (jwtPayload.TryGetValue("userId", out var userId)){
@@ -138,6 +140,7 @@ namespace UserShortUrlService.Controller
         }
         private static string GetJwtTokenFromHttpRequest(HttpRequest request){
             if(request.Headers.TryGetValue("Authorization", out var headerAuth)){
+                Console.WriteLine("headerAuth: " + headerAuth.ToString());
                 return headerAuth.ToString().Split("Bearer ")[1];
             }
             else{

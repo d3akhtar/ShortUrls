@@ -80,6 +80,7 @@ public class Startup
         });
         services.AddAuthorization();
         services.AddSingleton<ICounterRangeRpcClient, CounterRangeRpcClient>();
+        services.AddCors();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +92,8 @@ public class Startup
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShortUrlService"));
         }
+
+        app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
         
         // Note, authentication has to come before authorization
         app.UseAuthentication();

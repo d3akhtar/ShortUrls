@@ -31,6 +31,7 @@ public class Startup
         services.AddScoped<IUserManager, UserManager>();
         services.AddSingleton<IRabbitMqClient, RabbitMqClient>();
         services.AddGrpc();
+        services.AddCors();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +44,7 @@ public class Startup
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PlatformService"));
         }
 
+        app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("*"));
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>

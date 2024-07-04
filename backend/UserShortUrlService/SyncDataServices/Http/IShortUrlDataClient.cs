@@ -1,7 +1,10 @@
+using UserShortUrlService.DTO;
+using UserShortUrlService.Model;
+
 namespace UserShortUrlService.SyncDataServices.Http
 {
     public interface IShortUrlDataClient
     {
-        Task<bool> IsShortUrlMapped(string code);
+        Task<ShortUrlHttpResponseDTO> RequestForShortUrl(string code);
     }
 }

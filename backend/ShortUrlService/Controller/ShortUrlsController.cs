@@ -25,7 +25,7 @@ namespace ShortUrlService.Controller
         }
 
         [HttpGet("{code}")]
-        public ActionResult VisitShortUrl(string code)
+        public ActionResult VisitShortUrl(string code, [FromQuery]bool avoidRedirection = false)
         {
             ShortUrl shortUrl = _shortUrlRepository.GetShortUrlWithCode(code);
             if (shortUrl == null)
@@ -33,7 +33,9 @@ namespace ShortUrlService.Controller
                 return NotFound(new { Message = "No ShortUrl mapped to this code"} );
             }
 
-            return new RedirectResult(shortUrl.DestinationUrl);
+            return avoidRedirection ? 
+                Ok(new { Message = "ShortUrl was found", ShortUrl = shortUrl}):
+                new RedirectResult(shortUrl.DestinationUrl);
         }
 
         [HttpPost]

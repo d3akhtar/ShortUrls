@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using UserShortUrlService.DTO;
 using UserShortUrlService.Model;
 using UserShortUrlService.SyncDataServices.Http;
 
@@ -29,14 +31,16 @@ namespace UserShortUrlService.Data.Repository
         {
             List<UserShortUrl> addedUserShortUrls = new List<UserShortUrl>();
             foreach (var code in codes){
-                if 
-                (await _shortUrlDataClient.IsShortUrlMapped(code)
-                 && _db.UserShortUrls.FirstOrDefault(u => u.ShortUrlCode == code && u.UserId == userId) == null
-                 ){
+                ShortUrlHttpResponseDTO shortUrlResponse = await _shortUrlDataClient.RequestForShortUrl(code);
+                Console.WriteLine("shortUrlJson: " + shortUrlResponse.Message + " " + shortUrlResponse.ShortUrl);
+                if (shortUrlResponse != null && _db.UserShortUrls.FirstOrDefault(u => u.ShortUrlCode == code && u.UserId == userId) == null){
+                    // ShortUrlHttpResponseDTO shortUrlHttpResponseDTO = JsonSerializer.Deserialize<ShortUrlHttpResponseDTO>(shortUrlJson);
+                    // Console.WriteLine("shortUrlHttpResponseDTO.Message: " + shortUrlHttpResponseDTO.Message + " shorturl is null: " + shortUrlHttpResponseDTO.ShortUrl == null);
                     UserShortUrl userShortUrl = new()
                     {
                         ShortUrlCode = code,
-                        UserId = userId
+                        UserId = userId,
+                        DestinationUrl = shortUrlResponse.ShortUrl.DestinationUrl
                     };
                     Console.WriteLine($"--> Adding UserShortUrlCode, code: {code}, userId: {userId}" );
                     _db.UserShortUrls.Add(userShortUrl);
