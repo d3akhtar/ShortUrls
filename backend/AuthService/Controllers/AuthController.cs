@@ -7,8 +7,10 @@ using System.Text;
 using AuthService.AsyncDataServices;
 using AuthService.Data.Repository;
 using AuthService.DTO;
+using AuthService.ExternalAuthServices;
 using AuthService.Model;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,19 +24,22 @@ namespace AuthService.Controllers
         private readonly IUserManager _userManager;
         private readonly IConfiguration _configuration;
         private readonly IRabbitMqClient _rabbitMqClient;
+        private readonly IGoogleAuth _googleAuth;
 
         public AuthController
         (
             IMapper mapper, 
             IUserManager userManager, 
             IConfiguration configuration,
-            IRabbitMqClient rabbitMqClient
+            IRabbitMqClient rabbitMqClient,
+            IGoogleAuth googleAuth
         )
         {
             _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
             _rabbitMqClient = rabbitMqClient;
+            _googleAuth = googleAuth;
         }
 
         // for testing
@@ -51,27 +56,8 @@ namespace AuthService.Controllers
             var user = _userManager.FindUserWithEmail(loginRequest.Email);
             if (user == null || !_userManager.IsPasswordValid(user, loginRequest.Password)) return BadRequest("Invalid login");
 
-            string secretKey = _configuration["Jwt:Secret"];
-            JwtSecurityTokenHandler tokenHandler = new();
-            byte[] key = Encoding.ASCII.GetBytes(secretKey);
+            var tokenString = _userManager.GetTokenString(user);
 
-            SecurityTokenDescriptor descriptor = new()
-            {
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim("userId", user.UserId),
-                    new Claim("email", user.Email),
-                    new Claim("username", user.Username),
-                    new Claim("role", user.Role),
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            SecurityToken token = tokenHandler.CreateToken(descriptor);
-            string tokenString = tokenHandler.WriteToken(token);
             return Ok(
                 new
                 {
@@ -80,6 +66,37 @@ namespace AuthService.Controllers
                 }
             );
         }
+
+        [HttpGet("external-login")]
+        public async Task<ActionResult> ExternalLogin([FromQuery]string thirdPartyName, [FromQuery]string accessToken)
+        {
+            switch(thirdPartyName.ToLower()){
+                case "google":
+                    var userInfo = await _googleAuth.GetUserInfo(accessToken);
+
+                    User user = _userManager.FindUserWithEmail(userInfo.Email);
+
+                    if (user == null)
+                    {
+                        user = _userManager.AddUser(_mapper.Map<User>(userInfo));
+                        _userManager.SaveChanges();
+
+                        _rabbitMqClient.PublishNewUser(_mapper.Map<UserPublishDTO>(user));
+                    }
+
+                    var tokenString = _userManager.GetTokenString(user);
+
+                    return Ok(
+                        new
+                        {
+                            Message = "Login successful!",
+                            Token = tokenString
+                        }
+                    );
+            }
+            return Ok();
+        }
+
 
         [HttpPost("register")]
         public ActionResult RegisterUser([FromBody]RegisterRequestDTO registerRequest){

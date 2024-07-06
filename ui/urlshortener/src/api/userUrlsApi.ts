@@ -15,14 +15,24 @@ export const userUrlsApi = createApi({
     tagTypes: ["UserUrls"],
     endpoints: (builder) => ({
         getAllUserUrls: builder.query({
-            query: () => ({
-                url: ""
+            query: (body : any) => ({
+                url: "",
+                params:{
+                    searchQuery: body.searchQuery,
+                    pageNumber: body.pageNumber,
+                    pageSize: body.pageSize
+                }
             }),
             providesTags: ["UserUrls"]
        }),
        getUserUrls: builder.query({
-            query: () => ({
-                url: "/shorturls"
+            query: (body : any) => ({
+                url: "/shorturls",
+                params:{
+                    searchQuery: body.searchQuery,
+                    pageNumber: body.pageNumber,
+                    pageSize: body.pageSize
+                }
             }),
             providesTags: ["UserUrls"]
        }),

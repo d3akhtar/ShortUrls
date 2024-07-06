@@ -20,7 +20,7 @@ function AllUrls() {
     var urlCodes: urlCode[];
     if (!isLoading && isSuccess){
         console.log(data);
-        urlCodes = data;
+        urlCodes = data.shortUrls;
     }
 
     if (!isSuccess){
@@ -68,8 +68,7 @@ function AllUrls() {
             </div>
             {
               urlCodes!.map((urlCode: urlCode, i:number) => {
-                return i < 10 ? 
-                  (<UrlCodeRow shortUrlCode={urlCode.code} destinationUrl={urlCode.destinationUrl} isUserUrlCode={false} key={i}/>):(<></>)
+                return <UrlCodeRow shortUrlCode={urlCode.code} destinationUrl={urlCode.destinationUrl} isUserUrlCode={false} key={i}/>
               })
             }
             <div className='row mt-3 w-100 text-start'>

@@ -46,7 +46,7 @@ export default function Header() {
                 <Link className="nav-link" to="/UrlShortener/About"><span className='text-center'>About</span></Link>
             </li>   
             </ul>
-            {loggedInUser.id != "" ? 
+            {loggedInUser.userId != "" ? 
                 (
                     <ul className='navbar-nav ml-auto'>
                         <li className="nav-item">

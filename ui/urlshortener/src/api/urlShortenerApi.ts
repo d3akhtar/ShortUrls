@@ -16,8 +16,13 @@ export const urlShortenerApi = createApi({
     tagTypes: ["Urls"],
     endpoints: (builder) => ({
         getAllUrls: builder.query({
-            query: () => ({
+            query: (body : any) => ({
                 url: ``,
+                params:{
+                    searchQuery: body.searchQuery,
+                    pageNumber: body.pageNumber,
+                    pageSize: body.pageSize
+                }
             }),
             providesTags: ["Urls"]
        }),

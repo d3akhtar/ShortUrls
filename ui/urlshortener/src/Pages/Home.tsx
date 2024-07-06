@@ -52,9 +52,9 @@ function Home() {
             if (formData.alias != ""){
                 setShortLink(response.shortenedUrlWithAlias!);
                 //setQrCodeString(urlCode.pngQrCodeImage!);
-                if (loggedInUser.id != ""){
+                if (loggedInUser.userId != ""){
                     await addUserUrl({
-                        userId: loggedInUser.id,
+                        userId: loggedInUser.userId,
                         codes: [extractCodeFromShortUrl(response.shortenedUrlWithAlias!)]
                     });
                 }
@@ -62,9 +62,9 @@ function Home() {
             else{
                 setShortLink(response.shortenedUrl!);
                 //setQrCodeString(urlCode.pngQrCodeImage!);
-                if (loggedInUser.id != ""){
+                if (loggedInUser.userId != ""){
                     await addUserUrl({
-                        userId: loggedInUser.id,
+                        userId: loggedInUser.userId,
                         codes: [extractCodeFromShortUrl(response.shortenedUrl!)]
                     });
                 }

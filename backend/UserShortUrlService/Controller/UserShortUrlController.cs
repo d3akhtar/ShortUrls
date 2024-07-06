@@ -33,10 +33,22 @@ namespace UserShortUrlService.Controller
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public ActionResult<IEnumerable<UserShortUrl>> GetAllUserUrlCodes()
+        public ActionResult<IEnumerable<UserShortUrl>> GetAllUserShortUrls(string searchQuery = "", int pageNumber = 1, int pageSize = 10)
         {
-            var allUserShortUrls = _repo.GetAllUserShortUrlCodes(); 
-            return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(allUserShortUrls));
+            if (string.IsNullOrEmpty(searchQuery)) searchQuery = "";
+            if (pageSize > 100) pageSize = 100;
+            if (pageNumber < 1)
+            {
+                return BadRequest(new {Message = "Page number must be greater than 0."});
+            }
+
+            var allUserShortUrls = _repo.GetAllUserShortUrlCodes(searchQuery, pageNumber, pageSize); 
+            return Ok(new 
+                    {
+                        CurrentPage = pageNumber, 
+                        PageSize = pageSize,
+                        UserShortUrls = _mapper.Map<IEnumerable<UserShortUrlReadDTO>>(allUserShortUrls)
+                    });
         }
 
         [Authorize]
@@ -76,13 +88,25 @@ namespace UserShortUrlService.Controller
 
         [Authorize]
         [HttpGet("shorturls")]
-        public ActionResult<UserShortUrlReadDTO> GetShortUrlsForUser()
+        public ActionResult<UserShortUrlReadDTO> GetShortUrlsForUser(string searchQuery = "", int pageNumber = 1, int pageSize = 10)
         {
+            if (string.IsNullOrEmpty(searchQuery)) searchQuery = "";
+            if (pageSize > 100) pageSize = 100;
+            if (pageNumber < 1)
+            {
+                return BadRequest(new {Message = "Page number must be greater than 0."});
+            }
+
             try{
                 var userId = GetUserIdFromHttpRequest(HttpContext.Request);
                 if (_repo.DoesUserWithIdExist(userId)){
-                    var userShortUrls = _repo.GetUserShortUrlCodes(userId); 
-                    return Ok(_mapper.Map<IEnumerable<UserShortUrlReadDTO>>(userShortUrls));
+                    var userShortUrls = _repo.GetUserShortUrlCodes(userId, searchQuery, pageNumber, pageSize); 
+                    return Ok(new 
+                    {
+                        CurrentPage = pageNumber, 
+                        PageSize = pageSize,
+                        UserShortUrls = _mapper.Map<IEnumerable<UserShortUrlReadDTO>>(userShortUrls) 
+                    });
                 }
                 else{
                     return NotFound(new { Message = "User not found."} );

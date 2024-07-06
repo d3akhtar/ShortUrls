@@ -19,9 +19,21 @@ namespace ShortUrlService.Controller
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public ActionResult GetAllShortUrls()
+        public ActionResult GetAllShortUrls(string searchQuery = "", int pageNumber = 1, int pageSize = 5)
         {
-            return Ok(_shortUrlRepository.GetAllShortUrls());
+            if (string.IsNullOrEmpty(searchQuery)) searchQuery = "";
+            if (pageSize > 100) pageSize = 100;
+            if (pageNumber < 1)
+            {
+                return BadRequest(new {Message = "Page number must be greater than 0."});
+            }
+
+            return Ok(new 
+                    {
+                        CurrentPage = pageNumber, 
+                        PageSize = pageSize,
+                        ShortUrls = _shortUrlRepository.GetAllShortUrls(searchQuery, pageNumber, pageSize)
+                    });
         }
 
         [HttpGet("{code}")]
@@ -48,14 +60,19 @@ namespace ShortUrlService.Controller
                 {
                     string aliasCode = "";
                     if (!string.IsNullOrEmpty(alias)){
-                        if (alias.Length <= 12)
+                        if (alias.Length <= 20)
                         {
-                            var shortUrlWithAlias = _shortUrlRepository.GetShortUrlWithCode(alias);
-                            aliasCode = shortUrlWithAlias == null ? await _shortUrlRepository.AddShortUrl(url, alias):shortUrlWithAlias.Code;
-                            _shortUrlRepository.SaveChanges();
+                            if (_shortUrlRepository.DoesAliasExist(alias)){
+                                return BadRequest(new { Message = "This alias has been taken already, try a different one." });
+                            }
+                            else{
+                                var shortUrlWithAlias = _shortUrlRepository.GetShortUrlWithCode(alias);
+                                aliasCode = shortUrlWithAlias == null ? await _shortUrlRepository.AddShortUrl(url, alias):shortUrlWithAlias.Code;
+                                _shortUrlRepository.SaveChanges();
+                            }
                         }
                         else{
-                            return BadRequest(new { Message = "Make sure the alias is at most 12 characters." });
+                            return BadRequest(new { Message = "Make sure the alias is at most 20 characters." });
                         }
                     }
 

@@ -15,14 +15,14 @@ function Urls() {
     const [pageNumber,setPageNumber] = useState<number>(1);
     const [pageSize,setPageSize] = useState<number>(5);
     const {data,isLoading,isSuccess,isError,error} = useGetUserUrlsQuery({
-      userId: loggedInUser.id,
+      userId: loggedInUser.userId,
       searchQuery: searchQuery,
       pageNumber: pageNumber,
       pageSize: pageSize
     });
     var userUrlCodes: userUrlCode[];
     if (!isLoading && isSuccess){
-      userUrlCodes = data;
+      userUrlCodes = data.userShortUrls;
     }
     if (!isSuccess && !isLoading){
         console.log(error);

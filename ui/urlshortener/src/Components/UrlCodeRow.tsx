@@ -34,7 +34,7 @@ function UrlCodeRow(props: UrlCodeRowProps) {
     var result : any;
     if (props.isUserUrlCode){
       result = await deleteUserUrl({
-        userId: loggedInUser.id,
+        userId: loggedInUser.userId,
         code: props.shortUrlCode,
       });
     }

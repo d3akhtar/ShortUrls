@@ -4,7 +4,7 @@ import checkForToken from "../../Helpers/checkForToken";
 import jwtDecode from "jwt-decode";
 
 const emptyUser : user = {
-    id: "",
+    userId: "",
     email: "",
     username: "",
     role: ""
@@ -16,7 +16,7 @@ const token = checkForToken();
 const currentUser = token ? (() => {
     const decodedToken : user = jwtDecode(token);
     return {
-        id: decodedToken.id,
+        userId: decodedToken.userId,
         email: decodedToken.email,
         username: decodedToken.username,
         role: decodedToken.role
@@ -29,14 +29,14 @@ export const userSlice = createSlice({
     reducers:{
         setUser: (state, action : PayloadAction<user>) => {
             console.log("setting user...");
-            state.id = action.payload.id;
+            state.userId = action.payload.userId;
             state.email = action.payload.email;
             state.username = action.payload.username;
             state.role = action.payload.role;
         },
         clearUser: (state) => {
             console.log("logging off now...");
-            state.id = "";
+            state.userId = "";
             state.email = "";
             state.username = "";
             state.role = "";

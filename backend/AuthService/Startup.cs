@@ -2,6 +2,7 @@
 using AuthService.AsyncDataServices;
 using AuthService.Data;
 using AuthService.Data.Repository;
+using AuthService.ExternalAuthServices;
 using AuthService.SyncDataServices.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,7 @@ public class Startup
         //services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Users"));
         services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
         services.AddScoped<IUserManager, UserManager>();
+        services.AddScoped<IGoogleAuth, GoogleAuth>();
         services.AddSingleton<IRabbitMqClient, RabbitMqClient>();
         services.AddGrpc();
         services.AddCors();

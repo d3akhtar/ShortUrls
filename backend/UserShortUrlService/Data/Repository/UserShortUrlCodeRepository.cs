@@ -75,14 +75,25 @@ namespace UserShortUrlService.Data.Repository
             return _db.Users;
         }
 
-        public IEnumerable<UserShortUrl> GetAllUserShortUrlCodes()
+        public IEnumerable<UserShortUrl> GetAllUserShortUrlCodes(string searchQuery, int pageNumber, int pageSize)
         {
-            return _db.UserShortUrls.Include(usrc => usrc.User);
+            return _db.UserShortUrls.Include(usrc => usrc.User)
+                                    .Where(usrc => 
+                                            usrc.DestinationUrl.ToLower().Contains(searchQuery.ToLower()) || 
+                                            usrc.ShortUrlCode.ToLower().Contains(searchQuery.ToLower()))
+                                    .Skip((pageNumber - 1) * pageSize)
+                                    .Take(pageSize);
         }
 
-        public IEnumerable<UserShortUrl> GetUserShortUrlCodes(string userId)
+        public IEnumerable<UserShortUrl> GetUserShortUrlCodes(string userId, string searchQuery, int pageNumber, int pageSize)
         {
-            return _db.UserShortUrls.Include(usrc => usrc.User).Where(usrc => usrc.UserId == userId);
+            return _db.UserShortUrls.Include(usrc => usrc.User)
+                                    .Where(usrc => usrc.UserId == userId)
+                                    .Where(usrc => 
+                                            usrc.DestinationUrl.ToLower().Contains(searchQuery.ToLower()) || 
+                                            usrc.ShortUrlCode.ToLower().Contains(searchQuery.ToLower()))
+                                    .Skip((pageNumber - 1) * pageSize)
+                                    .Take(pageSize);
         }
 
         public bool SaveChanges()

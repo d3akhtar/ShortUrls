@@ -16,6 +16,8 @@ namespace AuthService.Profiles
             CreateMap<User, GrpcUserModel>();
             CreateMap<RegisterRequestDTO, User>()
             .ForMember(dest => dest.HashedPassword, opt => opt.ConvertUsing(new PasswordConverter(), src => src.Password));
+            CreateMap<ExternalUserProfileDTO, User>()
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Name));
         }
     }
 }

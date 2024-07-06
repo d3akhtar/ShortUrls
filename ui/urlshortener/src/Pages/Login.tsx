@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MiniLoader } from '../Components/Common';
-import { inputHelper } from '../Helpers';
+import { handleGoogleAuth, inputHelper } from '../Helpers';
 import { useLoginMutation } from '../api/authApi';
 import { apiResponse, user } from '../Interfaces';
 import { useDispatch } from 'react-redux';
@@ -24,6 +24,36 @@ function Login() {
 
     const nav = useNavigate();
 
+    useEffect(() => {
+        const accessTokenRegex = /access_token=([^&]+)/;
+        const isMatch = window.location.href.match(accessTokenRegex);
+    
+        if (isMatch) {
+          const accessToken = isMatch[1];
+          console.log("accessToken");
+          console.log(accessToken);
+        
+          const getAccessToken = async () => {
+            var result = await fetch(`http://shorturl.com/api/auth/external-login?thirdPartyName=google&accessToken=${accessToken}`);
+            var response : apiResponse = await result.json();
+            console.log(response);
+
+            localStorage.setItem(SD_General.tokenKey,response.token!);
+            const decodedToken : user = jwtDecode(response.token!);
+            dispatch(setUser({
+                userId: decodedToken.userId,
+                email: decodedToken.email,
+                username: decodedToken.username,
+                role: decodedToken.role
+            }));
+            nav("/UrlShortener");
+          }
+
+          getAccessToken();
+          //Cookies.set("access_token", accessToken); I don't need the access token for long, just need it to register user email and name
+        }
+      }, []);
+
     const handleSubmit = async (e : any) => {
         e.preventDefault();
         setIsLoading(true);
@@ -38,7 +68,7 @@ function Login() {
                 localStorage.setItem(SD_General.tokenKey,response.token!);
                 const decodedToken : user = jwtDecode(response.token!);
                 dispatch(setUser({
-                    id: decodedToken.id,
+                    userId: decodedToken.userId,
                     email: decodedToken.email,
                     username: decodedToken.username,
                     role: decodedToken.role
@@ -91,6 +121,12 @@ function Login() {
                         (<></>)
                     }
                 </form>
+                <div className='d-flex justify-content-center mt-3'>
+                    <p className='text-center text-white'>Or Choose One Of These</p>
+                </div>
+                <div className='d-flex justify-content-center'>
+                    <button onClick={handleGoogleAuth} className='g-signin2 mt-1 btn btn-light'><i className="bi bi-google"></i></button>
+                </div>
             </div>
         </div>
     </div>

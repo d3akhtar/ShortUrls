@@ -38,9 +38,13 @@ namespace ShortUrlService.Data.Repository
             _db.ShortUrls.Remove(_db.ShortUrls.First(u => u.Code == code));
         }
 
-        public IEnumerable<ShortUrl> GetAllShortUrls()
+        public IEnumerable<ShortUrl> GetAllShortUrls(string searchQuery, int pageNumber, int pageSize)
         {
-            return _db.ShortUrls;
+            return _db.ShortUrls.Where(u => 
+                                        u.DestinationUrl.ToLower().Contains(searchQuery.ToLower()) || 
+                                        u.Code.ToLower().Contains(searchQuery.ToLower()))
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize);
         }
 
         public ShortUrl GetShortUrlWithCode(string code)
@@ -86,6 +90,11 @@ namespace ShortUrlService.Data.Repository
                 ret += alphabet[rnd.Next(62)];
             }
             return ret;
+        }
+
+        public bool DoesAliasExist(string alias)
+        {
+            return _db.ShortUrls.FirstOrDefault(u => u.Code == alias && u.IsAlias) != null;
         }
     }
 }

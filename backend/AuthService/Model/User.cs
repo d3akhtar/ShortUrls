@@ -11,8 +11,7 @@ namespace AuthService.Model
         public string Email { get; set; }
         [Required]
         public string Username { get; set; }
-        [Required]
-        public string HashedPassword { get; set; }
+        public string? HashedPassword { get; set; }
         public string Role {get; set;}
     }
 }
