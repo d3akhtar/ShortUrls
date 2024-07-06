@@ -23,6 +23,7 @@ function Urls() {
     var userUrlCodes: userUrlCode[];
     if (!isLoading && isSuccess){
       userUrlCodes = data.userShortUrls;
+      console.log(userUrlCodes);
     }
     if (!isSuccess && !isLoading){
         console.log(error);
@@ -70,7 +71,7 @@ function Urls() {
             {
               userUrlCodes!.map((userUrlCode: userUrlCode, i:number) => {
                 return i < 10 ? 
-                  (<UrlCodeRow shortUrlCode={userUrlCode.shortUrlCode} destinationUrl={userUrlCode.destinationUrl} isUserUrlCode={true} key={i}/>):(<></>)
+                  (<UrlCodeRow pngQrCodeImage={userUrlCode.pngQrCodeImage!} shortUrlCode={userUrlCode.shortUrlCode} destinationUrl={userUrlCode.destinationUrl} isUserUrlCode={true} key={i}/>):(<></>)
               })
             }
             <div className='row mt-3 w-100 text-start'>

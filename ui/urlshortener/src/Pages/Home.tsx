@@ -24,6 +24,7 @@ function Home() {
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const [shortLink,setShortLink] = useState("");
     const [showQrCode,setShowQrCode] = useState<boolean>(false);
+    const [shortUrl,setShortUrl] = useState<urlCode>();
 
     const [addUrl] = useAddUrlMutation();
     const [addUserUrl] = useAddUserUrlMutation();
@@ -51,7 +52,8 @@ function Home() {
         else{
             if (formData.alias != ""){
                 setShortLink(response.shortenedUrlWithAlias!);
-                //setQrCodeString(urlCode.pngQrCodeImage!);
+                setQrCodeString(response.shortUrlWithAlias!.pngQrCodeImage!);
+                setShortUrl(response.shortUrlWithAlias!);
                 if (loggedInUser.userId != ""){
                     await addUserUrl({
                         userId: loggedInUser.userId,
@@ -61,7 +63,8 @@ function Home() {
             }
             else{
                 setShortLink(response.shortenedUrl!);
-                //setQrCodeString(urlCode.pngQrCodeImage!);
+                setQrCodeString(response.shortUrl!.pngQrCodeImage!);
+                setShortUrl(response.shortUrl!);
                 if (loggedInUser.userId != ""){
                     await addUserUrl({
                         userId: loggedInUser.userId,
@@ -131,22 +134,22 @@ function Home() {
                                             height="150px"
                                             />
                                         </div>
-                                        {/* <div className='col-12 col-md-9'>
+                                        {<div className='col-12 col-md-9'>
                                             <div className='justify-content-center'>
                                                 <a href={`data:image/png;base64,${qrCodeString}`} 
                                                 download={`shortLinkQrCode_${shortLink.substring(shortLink.lastIndexOf("/") + 1)}`} 
                                                 className='m-1 btn btn-primary w-50'>PNG
                                                 </a><br/>
                                                 <a 
-                                                href={`data:image/svg+xml;base64,${btoa(urlCode!.svgQrCodeImage)}`} 
+                                                href={`data:image/svg+xml;base64,${btoa(shortUrl!.svgQrCodeImage!)}`} 
                                                 download={`shortLinkQrCode_${shortLink.substring(shortLink.lastIndexOf("/") + 1)}`}
                                                 className='m-1 btn btn-secondary w-50'>SVG</a><br/>
                                                 <a 
-                                                href={`data:image/png;base64,${qrCodeString}`} 
+                                                href={URL.createObjectURL(new Blob([shortUrl!.asciiQrCodeImage!], { type: 'text/plain'}))} 
                                                 download={`shortLinkQrCode_${shortLink.substring(shortLink.lastIndexOf("/") + 1)}`}
                                                 className='m-1 btn btn-warning w-50'>Ascii</a><br/>
                                             </div>
-                                        </div> */}
+                                        </div>}
                                     </div>
                                 ):(<></>)}
                             </div>

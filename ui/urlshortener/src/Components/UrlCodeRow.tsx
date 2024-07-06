@@ -9,8 +9,9 @@ import { updateAliasBody, updateUrlCodeLinkBody } from '../Interfaces/RequestBod
 
 interface UrlCodeRowProps {
     shortUrlCode: string
-    destinationUrl: string,
+    destinationUrl: string
     isUserUrlCode: boolean
+    pngQrCodeImage: string
 }
 
 function UrlCodeRow(props: UrlCodeRowProps) {
@@ -74,7 +75,7 @@ function UrlCodeRow(props: UrlCodeRowProps) {
           <div className='row w-100 border text-start'>
             <div className='p-1 col-12 col-md-2 d-flex align-items-center justify-content-center' style={{borderRight:"1px solid white"}}>
             <img 
-            src={`data:image/png;base64,`} 
+            src={`data:image/png;base64,${props.pngQrCodeImage}`} 
             alt="Red dot"
             width="100px"
             height="100px"

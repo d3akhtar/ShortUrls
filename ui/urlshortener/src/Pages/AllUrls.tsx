@@ -68,7 +68,7 @@ function AllUrls() {
             </div>
             {
               urlCodes!.map((urlCode: urlCode, i:number) => {
-                return <UrlCodeRow shortUrlCode={urlCode.code} destinationUrl={urlCode.destinationUrl} isUserUrlCode={false} key={i}/>
+                return <UrlCodeRow pngQrCodeImage={urlCode.pngQrCodeImage!} shortUrlCode={urlCode.code} destinationUrl={urlCode.destinationUrl} isUserUrlCode={false} key={i}/>
               })
             }
             <div className='row mt-3 w-100 text-start'>

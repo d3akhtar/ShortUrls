@@ -15,7 +15,7 @@ namespace ShortUrlService.Data.Repository
             _db = db;
             _counterRangeRpcClient = counterRangeRpcClient;
         }
-        public async Task<string> AddShortUrl(string destinationUrl, string alias = "")
+        public async Task<ShortUrl> AddShortUrl(string destinationUrl, string alias = "")
         {
             int currentCount = Counter.CurrentNumber;
             if (string.IsNullOrEmpty(alias)) await Counter.IncrementCounter(_counterRangeRpcClient);
@@ -30,7 +30,7 @@ namespace ShortUrlService.Data.Repository
             };
 
             _db.ShortUrls.Add(shortUrl);
-            return shortUrl.Code;
+            return shortUrl;
         }
 
         public void DeleteShortUrl(string code)

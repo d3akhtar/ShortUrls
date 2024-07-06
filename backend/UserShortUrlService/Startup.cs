@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using ShortUrlService.Helper;
 public class Startup
 {
     public IConfiguration Configuration { get; set; }
@@ -124,6 +125,7 @@ public class Startup
             }
         }
         
+        QrCodeStringGenerator.SetShortenedUrlBase(Configuration["ShortenedUrlBase"]);
         PrepDb.PrepPopulation(app);
     }
 }

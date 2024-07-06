@@ -1,7 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShortUrlService.AsyncDataServices;
 using ShortUrlService.Data.Repository;
+using ShortUrlService.DTO;
 using ShortUrlService.Model;
 
 namespace ShortUrlService.Controller
@@ -11,10 +13,12 @@ namespace ShortUrlService.Controller
     public class ShortUrlsController : ControllerBase
     {
         private readonly IShortUrlRepository _shortUrlRepository;
+        private readonly IMapper _mapper;
 
-        public ShortUrlsController(IShortUrlRepository shortUrlRepository)
+        public ShortUrlsController(IShortUrlRepository shortUrlRepository, IMapper mapper)
         {
             _shortUrlRepository = shortUrlRepository;
+            _mapper = mapper;
         }
 
         [Authorize(Roles = "admin")]
@@ -27,12 +31,14 @@ namespace ShortUrlService.Controller
             {
                 return BadRequest(new {Message = "Page number must be greater than 0."});
             }
-
+            
+            var shortUrls = _shortUrlRepository.GetAllShortUrls(searchQuery, pageNumber, pageSize);
+            
             return Ok(new 
                     {
                         CurrentPage = pageNumber, 
                         PageSize = pageSize,
-                        ShortUrls = _shortUrlRepository.GetAllShortUrls(searchQuery, pageNumber, pageSize)
+                        ShortUrls = _mapper.Map<IEnumerable<ShortUrlReadDTO>>(shortUrls)
                     });
         }
 
@@ -46,7 +52,7 @@ namespace ShortUrlService.Controller
             }
 
             return avoidRedirection ? 
-                Ok(new { Message = "ShortUrl was found", ShortUrl = shortUrl}):
+                Ok(new { Message = "ShortUrl was found", ShortUrl = _mapper.Map<ShortUrlReadDTO>(shortUrl)}):
                 new RedirectResult(shortUrl.DestinationUrl);
         }
 
@@ -54,10 +60,12 @@ namespace ShortUrlService.Controller
         public async Task<ActionResult> CreateNewShortUrl(string url, string alias="")
         {
             string baseUrl = GetBaseUrlWithRequest(HttpContext.Request);
+            
             try
             {
                 if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
+                    ShortUrl shortUrlWithAlias = null;
                     string aliasCode = "";
                     if (!string.IsNullOrEmpty(alias)){
                         if (alias.Length <= 20)
@@ -66,8 +74,8 @@ namespace ShortUrlService.Controller
                                 return BadRequest(new { Message = "This alias has been taken already, try a different one." });
                             }
                             else{
-                                var shortUrlWithAlias = _shortUrlRepository.GetShortUrlWithCode(alias);
-                                aliasCode = shortUrlWithAlias == null ? await _shortUrlRepository.AddShortUrl(url, alias):shortUrlWithAlias.Code;
+                                shortUrlWithAlias = _shortUrlRepository.GetShortUrlWithCode(alias);
+                                aliasCode = shortUrlWithAlias == null ? _shortUrlRepository.AddShortUrl(url, alias).GetAwaiter().GetResult().Code:shortUrlWithAlias.Code;
                                 _shortUrlRepository.SaveChanges();
                             }
                         }
@@ -81,16 +89,26 @@ namespace ShortUrlService.Controller
                     if (shortUrl != null)
                     {
                         return string.IsNullOrEmpty(aliasCode) ? 
-                            Ok(new { ShortenedUrl = baseUrl + shortUrl.Code }):
-                            Ok(new { ShortenedUrl = baseUrl + shortUrl.Code, ShortenedUrlWithAlias = baseUrl + aliasCode });
+                            Ok(new { ShortenedUrl = baseUrl + shortUrl.Code, ShortUrl = _mapper.Map<ShortUrlReadDTO>(shortUrl) }):
+                            Ok(new { 
+                                ShortenedUrl = baseUrl + shortUrl.Code, 
+                                ShortenedUrlWithAlias = baseUrl + aliasCode,
+                                ShortUrl = _mapper.Map<ShortUrlReadDTO>(shortUrl),
+                                ShortUrlWithAlias = _mapper.Map<ShortUrlReadDTO>(shortUrlWithAlias != null ? shortUrlWithAlias:_shortUrlRepository.GetShortUrlWithCode(aliasCode))
+                            });
                     }
 
-                    string code = await _shortUrlRepository.AddShortUrl(url);
+                    shortUrl = await _shortUrlRepository.AddShortUrl(url);
 
                     _shortUrlRepository.SaveChanges();
                     return string.IsNullOrEmpty(aliasCode) ? 
-                            Ok(new { ShortenedUrl = baseUrl + code }):
-                            Ok(new { ShortenedUrl = baseUrl + code, ShortenedUrlWithAlias = baseUrl + aliasCode });
+                            Ok(new { ShortenedUrl = baseUrl + shortUrl.Code, ShortUrl = _mapper.Map<ShortUrlReadDTO>(shortUrl) }):
+                            Ok(new { 
+                                ShortenedUrl = baseUrl + shortUrl.Code, 
+                                ShortenedUrlWithAlias = baseUrl + aliasCode,
+                                ShortUrl = _mapper.Map<ShortUrlReadDTO>(shortUrl),
+                                ShortUrlWithAlias = _mapper.Map<ShortUrlReadDTO>(shortUrlWithAlias != null ? shortUrlWithAlias:_shortUrlRepository.GetShortUrlWithCode(aliasCode))
+                            });
                 }
                 else
                 {

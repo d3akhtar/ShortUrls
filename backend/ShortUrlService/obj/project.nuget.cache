@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "D+gxVnuHvivzmKF/kpc/8/XKOftahl2jart9ZPsSyIQC0KBILj/46nvfwXlbnL8UT1DWZgUV5tanuehnk1CRQA==",
+  "dgSpecHash": "2pqkyWNVSsNcBH6ZEFvGJnpZgUaGuhayn9I73sd9aLBhPfGPOt8nQrNyFDep9O/4vEh4Ljks+2cYmi9N1i/ePw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Danyal\\Documents\\dotnet\\ShortUrls\\backend\\ShortUrlService\\ShortUrlService.csproj",
   "expectedPackageFiles": [
@@ -56,6 +56,7 @@
     "C:\\Users\\Danyal\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\Danyal\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Danyal\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\Danyal\\.nuget\\packages\\qrcoder\\1.6.0\\qrcoder.1.6.0.nupkg.sha512",
     "C:\\Users\\Danyal\\.nuget\\packages\\rabbitmq.client\\6.8.1\\rabbitmq.client.6.8.1.nupkg.sha512",
     "C:\\Users\\Danyal\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\Danyal\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",

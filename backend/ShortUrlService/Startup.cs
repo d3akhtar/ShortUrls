@@ -15,6 +15,7 @@ using ShortUrlService.AsyncDataServices;
 using System.Diagnostics.Metrics;
 using ShortUrlService.Helper.Counter;
 using Azure.Core;
+using ShortUrlService.Helper;
 public class Startup
 {
     public IConfiguration Configuration { get; set; }
@@ -81,6 +82,7 @@ public class Startup
         services.AddAuthorization();
         services.AddSingleton<ICounterRangeRpcClient, CounterRangeRpcClient>();
         services.AddCors();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,5 +122,7 @@ public class Startup
                 Console.WriteLine("--> Error while applying migrations for shorturl db: " + ex.Message);
             }
         }
+
+        QrCodeStringGenerator.SetShortenedUrlBase(Configuration["ShortenedUrlBase"]);
     }
 }

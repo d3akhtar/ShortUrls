@@ -1,3 +1,4 @@
+import urlCode from "./urlCode";
 import user from "./user";
 
 export default interface apiResponse {
@@ -6,4 +7,6 @@ export default interface apiResponse {
     user?: user;
     shortenedUrl? : string;
     shortenedUrlWithAlias? : string;
+    shortUrl?: urlCode;
+    shortUrlWithAlias?: urlCode;
 }

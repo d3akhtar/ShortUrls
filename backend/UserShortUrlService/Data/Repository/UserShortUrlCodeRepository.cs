@@ -40,7 +40,7 @@ namespace UserShortUrlService.Data.Repository
                     {
                         ShortUrlCode = code,
                         UserId = userId,
-                        DestinationUrl = shortUrlResponse.ShortUrl.DestinationUrl
+                        DestinationUrl = shortUrlResponse.ShortUrl.DestinationUrl,
                     };
                     Console.WriteLine($"--> Adding UserShortUrlCode, code: {code}, userId: {userId}" );
                     _db.UserShortUrls.Add(userShortUrl);
