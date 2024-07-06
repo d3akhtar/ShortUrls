@@ -122,7 +122,10 @@ function Home() {
                                     <i className="bi bi-clipboard-check-fill me-2"></i>Copy
                                     </button>
                                 </div>
-                                <button onClick={() => setShortLink("")} className='btn btn-warning'><i className="me-1 bi bi-plus-circle"></i> Get New Link</button>
+                                <button onClick={() => { 
+                                    setShortLink("");
+                                    setFormData(initialFormData);
+                                }} className='btn btn-warning'><i className="me-1 bi bi-plus-circle"></i> Get New Link</button>
                                 {showQrCode ? (
                                     <div className='container d-flex align-items-center bg-white border' 
                                     style={{position:"fixed", top: "58%", left:"33%", width:"350px", height: "160px"}}>

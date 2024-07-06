@@ -53,10 +53,10 @@ function AllUrls() {
               </form>
             </div>
             <div className='row w-100 text-start'>
-              <div className='p-2 col-12 col-md-2 border'>
+              <div className='p-2 col-12 col-md-3 border'>
                 <span className='text-info h3'>QR</span>
               </div>
-              <div className='p-2 col-12 col-md-2 border'>
+              <div className='p-2 col-12 col-md-1 border'>
                 <span className='text-info h3'>Code</span>
               </div>
               <div className='p-2 col-12 col-md-7 border'>
@@ -68,7 +68,7 @@ function AllUrls() {
             </div>
             {
               urlCodes!.map((urlCode: urlCode, i:number) => {
-                return <UrlCodeRow pngQrCodeImage={urlCode.pngQrCodeImage!} shortUrlCode={urlCode.code} destinationUrl={urlCode.destinationUrl} isUserUrlCode={false} key={i}/>
+                return <UrlCodeRow shortUrl={urlCode} shortUrlCode={urlCode.code} destinationUrl={urlCode.destinationUrl} isUserUrlCode={false} key={i}/>
               })
             }
             <div className='row mt-3 w-100 text-start'>

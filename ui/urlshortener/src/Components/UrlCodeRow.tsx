@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { apiResponse, urlCode, user } from '../Interfaces'
+import { apiResponse, urlCode, user, userUrlCode } from '../Interfaces'
 import { useDeleteUrlMutation, useUpdateUrlLinkMutation } from '../api/urlShortenerApi'
 import { MainLoader } from './Common'
 import { useSelector } from 'react-redux'
@@ -11,7 +11,7 @@ interface UrlCodeRowProps {
     shortUrlCode: string
     destinationUrl: string
     isUserUrlCode: boolean
-    pngQrCodeImage: string
+    shortUrl: urlCode | userUrlCode
 }
 
 function UrlCodeRow(props: UrlCodeRowProps) {
@@ -22,6 +22,7 @@ function UrlCodeRow(props: UrlCodeRowProps) {
   const [editUrlCodeLink] = useUpdateUrlLinkMutation();
   const [isLoading,setIsLoading] = useState<boolean>(false);
   const [isEditing,setIsEditing] = useState<boolean>(false);
+  const [qrCodeDownloadSectionShowing,toggleQrCodeDownloadSectionShowing] = useState<boolean>(false);
   
   const initialEditData = {
     code: props.shortUrlCode,
@@ -73,16 +74,39 @@ function UrlCodeRow(props: UrlCodeRowProps) {
           (<MainLoader/>):
           (
           <div className='row w-100 border text-start'>
-            <div className='p-1 col-12 col-md-2 d-flex align-items-center justify-content-center' style={{borderRight:"1px solid white"}}>
+            <div className='p-1 col-12 col-md-3 d-flex align-items-center justify-content-center' style={{borderRight:"1px solid white"}}>
             <img 
-            src={`data:image/png;base64,${props.pngQrCodeImage}`} 
+            src={`data:image/png;base64,${props.shortUrl.pngQrCodeImage}`} 
             alt="Red dot"
             width="100px"
             height="100px"
             className='p-1'
             />
+            <button onClick={() => toggleQrCodeDownloadSectionShowing(!qrCodeDownloadSectionShowing)} className={`btn btn-${qrCodeDownloadSectionShowing ? "danger":"primary"} ms-3`}><i className={`bi ${qrCodeDownloadSectionShowing ? "bi-x-lg":"bi-download"}`}></i></button>
+            {qrCodeDownloadSectionShowing ? 
+            (
+              <div className=''>
+                  <div className='ms-3 justify-content-center'>
+                      <a href={`data:image/png;base64,${props.shortUrl.pngQrCodeImage!}`} 
+                      download={`shortLinkQrCode_${props.shortUrlCode}`} 
+                      className='m-1 btn btn-primary w-100'>PNG
+                      </a><br/>
+                      <a 
+                      href={`data:image/svg+xml;base64,${btoa(props.shortUrl.svgQrCodeImage!)}`} 
+                      download={`shortLinkQrCode_${props.shortUrlCode}`}
+                      className='m-1 btn btn-secondary w-100'>SVG</a><br/>
+                      <a 
+                      href={URL.createObjectURL(new Blob([props.shortUrl.asciiQrCodeImage!], { type: 'text/plain'}))} 
+                      download={`shortLinkQrCode_${props.shortUrlCode}`}
+                      className='m-1 btn btn-warning w-100'>Ascii</a><br/>
+                  </div>
+              </div>
+            ):
+            (
+              <></>
+            )}
             </div>
-            <div className='p-1 col-12 col-md-2 d-flex align-items-center' style={{borderRight:"1px solid white"}}>
+            <div className='p-1 col-12 col-md-1 d-flex align-items-center' style={{borderRight:"1px solid white"}}>
               <span className='ms-1 text-light'>{props.shortUrlCode}</span>
             </div>
             <div className='p-1 col-12 col-md-7 d-flex align-items-center' style={{borderRight:"1px solid white"}}>

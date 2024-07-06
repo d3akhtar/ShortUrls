@@ -55,10 +55,10 @@ function Urls() {
                 </form>
             </div>
             <div className='row w-100 text-start'>
-              <div className='p-2 col-12 col-md-2 border'>
+              <div className='p-2 col-12 col-md-3 border'>
                 <span className='text-info h3'>QR</span>
               </div>
-              <div className='p-2 col-12 col-md-2 border'>
+              <div className='p-2 col-12 col-md-1 border'>
                 <span className='text-info h3'>Code</span>
               </div>
               <div className='p-2 col-12 col-md-7 border'>
@@ -71,7 +71,7 @@ function Urls() {
             {
               userUrlCodes!.map((userUrlCode: userUrlCode, i:number) => {
                 return i < 10 ? 
-                  (<UrlCodeRow pngQrCodeImage={userUrlCode.pngQrCodeImage!} shortUrlCode={userUrlCode.shortUrlCode} destinationUrl={userUrlCode.destinationUrl} isUserUrlCode={true} key={i}/>):(<></>)
+                  (<UrlCodeRow shortUrl={userUrlCode} shortUrlCode={userUrlCode.shortUrlCode} destinationUrl={userUrlCode.destinationUrl} isUserUrlCode={true} key={i}/>):(<></>)
               })
             }
             <div className='row mt-3 w-100 text-start'>

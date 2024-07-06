@@ -143,7 +143,7 @@ function Register() {
                     <p className='text-center text-white'>Or Choose One Of These</p>
                 </div>
                 <div className='d-flex justify-content-center'>
-                    <button onClick={handleGoogleAuth} className='g-signin2 mt-1 btn btn-light'><i className="bi bi-google"></i></button>
+                    <button onClick={handleGoogleAuth} className='mt-1 btn btn-light'><i className="bi bi-google"></i></button>
                 </div>
             </div>
         </div>

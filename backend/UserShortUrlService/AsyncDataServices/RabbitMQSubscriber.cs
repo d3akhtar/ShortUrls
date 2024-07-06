@@ -44,6 +44,8 @@ namespace UserShortUrlService.AsyncDataServices
         }
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            stoppingToken.ThrowIfCancellationRequested(); // we can request this method stops if we pass token here
+            
             Console.WriteLine("Waiting for a newly registered user...");
 
             var consumer = new EventingBasicConsumer(_channel);
@@ -78,6 +80,20 @@ namespace UserShortUrlService.AsyncDataServices
                         Console.WriteLine("--> Error while adding user from message, error: " + ex.Message);
                     }
             }
+        }
+
+        private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)
+        {
+            Console.WriteLine("rabbitmq connection has been closed");
+        }
+
+        public override void Dispose()
+        {
+            if (_channel.IsOpen){
+                _channel.Close();
+                _connection.Close();
+            }
+            base.Dispose();
         }
     }
 }

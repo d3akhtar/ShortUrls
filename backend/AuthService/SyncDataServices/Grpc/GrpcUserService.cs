@@ -23,6 +23,7 @@ namespace AuthService.SyncDataServices.Grpc
             var users = _userManager.GetAllUsers();
 
             foreach (var user in users){
+                Console.WriteLine("sending user with email: "  + user.Email);
                 response.Users.Add(_mapper.Map<GrpcUserModel>(user));
             }
 
