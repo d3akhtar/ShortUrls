@@ -16,8 +16,7 @@ namespace AuthService.AsyncDataServices
             _configuration = configuration;
             var factory = new ConnectionFactory 
             { 
-                HostName = _configuration["RabbitMQHost"], 
-                Port = int.Parse(_configuration["RabbitMQPort"]) 
+                Uri = new Uri($"amqp://guest:guest@{configuration["RabbitMQHost"]}:{configuration["RabbitMQPort"]}")
             };
             try {
                 _connection = factory.CreateConnection();

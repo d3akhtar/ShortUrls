@@ -18,7 +18,7 @@ namespace ShortUrlService.AsyncDataServices
         public CounterRangeRpcClient(IConfiguration configuration)
         {
             _configuration = configuration;
-            var factory = new ConnectionFactory { HostName = _configuration["RabbitMQHost"], Port = int.Parse(_configuration["RabbitMQPort"]) };
+            var factory = new ConnectionFactory { Uri = new Uri($"amqp://guest:guest@{configuration["RabbitMQHost"]}:{configuration["RabbitMQPort"]}")};
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();

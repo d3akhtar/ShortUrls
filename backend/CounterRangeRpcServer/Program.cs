@@ -22,12 +22,12 @@ var builder = new ConfigurationBuilder()
 
 IConfiguration config = builder.Build();
 
-Console.WriteLine("Host: " + config["RabbitMQHost"] + ", Port: " + config["RabbitMQPort"]);
+Console.WriteLine("Config stuff, Host: " + config["RabbitMQHost"] + ", Port: " + config["RabbitMQPort"]);
 
 
 // Connect to message queue, and initialize counter
 int count = 1;
-var factory = new ConnectionFactory { HostName = config["RabbitMQHost"], Port = int.Parse(config["RabbitMQPort"])};
+var factory = new ConnectionFactory { Uri = new Uri($"amqp://guest:guest@{config["RabbitMQHost"]}:{config["RabbitMQPort"]}")};
 var connection = factory.CreateConnection();
 var channel = connection.CreateModel();
 channel.QueueDeclare(queue: "get_next_counter_range_queue", durable: false, exclusive: false, autoDelete: false, arguments: null);

@@ -1,0 +1,112 @@
+name: myapp
+
+# --- Services --- #
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - 1433:1433
+    networks:
+      - db_net
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=pa55w0rd!
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P pa55w0rd! -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+    
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 5672
+      - 15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_net
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+
+  authservice:
+    networks:
+      - rabbitmq_net
+      - db_net
+      - dataservices_net
+    depends_on:
+      - rabbitmq
+      - db
+    restart: on-failure
+    image: d3akhtar/authservice
+    ports:
+      - 8080:8080
+
+  counterrangerpcserver:
+    networks:
+      - rabbitmq_net
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+    depends_on:
+      - rabbitmq
+    restart: on-failure
+    image: d3akhtar/counterrangerpcserver
+    ports:
+      - 8081:8080
+  
+  shorturlservice:
+    networks:
+      - rabbitmq_net
+      - db_net
+      - dataservices_net
+    image: d3akhtar/shorturlservice
+    depends_on:
+      - rabbitmq
+      - db
+    restart: on-failure
+    ports:
+      - 8082:8080
+
+  usershorturlservice:
+    networks:
+      - rabbitmq_net
+      - db_net
+      - dataservices_net
+    image: d3akhtar/usershorturlservice
+    depends_on:
+      - rabbitmq
+      - db
+      - authservice
+    restart: on-failure
+    ports:
+      - 8083:8080
+
+# --- Networks --- #
+
+networks:
+  rabbitmq_net:
+    driver: bridge
+  db_net:
+    driver: bridge
+  dataservices_net:
+    driver: bridge
+
+# --- Volumes --- #
+
+volumes:
+  sqlserver_data:
