@@ -28,7 +28,7 @@ public class Startup
         services.AddSwaggerGen();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         //services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Users"));
-        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Azure")));
         services.AddScoped<IUserManager, UserManager>();
         services.AddScoped<IGoogleAuth, GoogleAuth>();
         services.AddSingleton<IRabbitMqClient, RabbitMqClient>();

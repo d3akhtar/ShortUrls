@@ -62,7 +62,7 @@ public class Startup
         // else{
         //     services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
         // }
-        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Azure")));
         services.AddScoped<IUserShortUrlCodeRepository, UserShortUrlCodeRepository>();
         services.AddHostedService<RabbitMQSubscriber>();
         services.AddScoped<IUserDataClient, UserDataClient>();
