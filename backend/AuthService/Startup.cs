@@ -28,7 +28,7 @@ public class Startup
         services.AddSwaggerGen();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         //services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("Users"));
-        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Azure")));
+        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
         services.AddScoped<IUserManager, UserManager>();
         services.AddScoped<IGoogleAuth, GoogleAuth>();
         services.AddSingleton<IRabbitMqClient, RabbitMqClient>();
@@ -62,14 +62,15 @@ public class Startup
         using (var scope = app.ApplicationServices.CreateScope())
         {
             var db = scope.ServiceProvider.GetService<AppDbContext>();
-
-            try{
-                //if (_env.IsProduction())
-                    db.Database.Migrate();
-            }
-            catch(Exception ex){
-                Console.WriteLine("--> Error while applying migrations for shorturl db: " + ex.Message);
-            }
+            db.Database.Migrate(); // want to crash if connection fails so it auto restarts
+            // try{
+            //     Console.WriteLine("part of conn string: " + Configuration.GetConnectionString("Azure").Substring(10));
+            //     //if (_env.IsProduction())
+            //         db.Database.Migrate();
+            // }
+            // catch(Exception ex){
+            //     Console.WriteLine("--> Error while applying migrations for shorturl db: " + ex.Message);
+            // }
         }
     }
 }

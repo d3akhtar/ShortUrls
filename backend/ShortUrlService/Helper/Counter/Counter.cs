@@ -11,6 +11,7 @@ namespace ShortUrlService.Helper.Counter
         public async static Task SetCounterRange(ICounterRangeRpcClient counterRangeRpcClient)
         {
             var counterRangeResponse = await counterRangeRpcClient.GetNextCounterRange();
+            Console.WriteLine($"Received new range, curr number: {counterRangeResponse.Start}, limit: {counterRangeResponse.Max}");
             CurrentNumber = counterRangeResponse.Start;
             Limit = counterRangeResponse.Max;
         }
