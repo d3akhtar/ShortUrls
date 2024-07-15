@@ -13,7 +13,7 @@ ui/urlshortener/.pnp.js
 ui/urlshortener/coverage
 
 # production
-ui/urlshortener/build
+# ui/urlshortener/build
 
 # misc
 ui/urlshortener/.DS_Store
