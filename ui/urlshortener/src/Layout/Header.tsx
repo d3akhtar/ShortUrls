@@ -20,7 +20,7 @@ export default function Header() {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light w-100 px-4" style={{position:"fixed", backgroundColor:"#e3f2fd", zIndex:10}}>
-        <Link className="navbar-brand" to="/UrlShortener">UrlShortener</Link> 
+        <Link className="navbar-brand" to="/UrlShortener">ShortUrls</Link> 
         <div className="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
                 {loggedInUser.role == SD_ROLES.Admin ? 
