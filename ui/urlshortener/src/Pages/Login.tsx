@@ -34,7 +34,7 @@ function Login() {
           console.log(accessToken);
         
           const getAccessToken = async () => {
-            var result = await fetch(`http://shorturls.danyalakt.com/auth/external-login?thirdPartyName=google&accessToken=${accessToken}`);
+            var result = await fetch(`https://shorturls.danyalakt.com/auth/external-login?thirdPartyName=google&accessToken=${accessToken}`);
             var response : apiResponse = await result.json();
             console.log(response);
 
