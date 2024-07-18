@@ -6,7 +6,7 @@ import { getAllArgs } from "../Interfaces";
 export const userUrlsApi = createApi({
     reducerPath: "userUrlsApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://shorturls.danyalakt.com/user/",
+        baseUrl: "https://shorturls.danyalakt.com/user/",
         prepareHeaders:(headers: Headers, api) => {
             const token = localStorage.getItem(SD_General.tokenKey);
             token && headers.append("Authorization","Bearer " + token); // Pass token so [Authorize] and [Authenticate] can check if user has permission
