@@ -5,6 +5,7 @@ namespace AuthService.Data.Repository
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
+    using System.Security.Cryptography;
     using System.Text;
     using BCrypt.Net;
     using Microsoft.IdentityModel.Tokens;
@@ -27,13 +28,32 @@ namespace AuthService.Data.Repository
             }
 
             user.Role = "user";
+            user.VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(64)) + 
+                                     Convert.ToHexString(Encoding.UTF8.GetBytes(user.UserId.ToString()));
+            user.CreatedAt = DateTime.Now;
+
             _db.Add(user);
             return user;
+        }
+
+        public void DeleteUsers(IEnumerable<User> users)
+        {
+            _db.Users.RemoveRange(users);
         }
 
         public User FindUserWithEmail(string email)
         {
             return _db.Users.FirstOrDefault(u => u.Email == email);
+        }
+
+        public User FindUserWithPasswordResetToken(string token)
+        {
+            return _db.Users.FirstOrDefault(u => u.PasswordResetToken == token);
+        }
+
+        public User FindUserWithVerificationToken(string token)
+        {
+            return _db.Users.FirstOrDefault(u => u.VerificationToken == token);
         }
 
         public IEnumerable<User> GetAllUsers()
@@ -53,7 +73,7 @@ namespace AuthService.Data.Repository
                 Audience = _configuration["Jwt:Audience"],
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("userId", user.UserId),
+                    new Claim("userId", user.UserId.ToString()),
                     new Claim("email", user.Email),
                     new Claim("username", user.Username),
                     new Claim("role", user.Role),
@@ -67,7 +87,12 @@ namespace AuthService.Data.Repository
             return tokenString;
         }
 
-        public User GetUserById(string id)
+        public IEnumerable<User> GetUnverifiedUsers()
+        {
+            return _db.Users.Where(u => u.VerifiedAt == null);
+        }
+
+        public User GetUserById(int id)
         {
             return _db.Users.FirstOrDefault(u => u.UserId == id);
         }
@@ -80,6 +105,29 @@ namespace AuthService.Data.Repository
         public bool SaveChanges()
         {
             return _db.SaveChanges() >= 0;
+        }
+
+        public string SetPasswordResetToken(User user)
+        {
+            string passwordResetToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(64)) + 
+                                        Convert.ToHexString(Encoding.UTF8.GetBytes(user.Email.ToString())); 
+            user.PasswordResetToken = passwordResetToken;
+            user.ResetTokenExpires = DateTime.Now.AddDays(1);
+
+            _db.Update(user);
+
+            return passwordResetToken;
+        }
+
+        public void SetUserPassword(User user, string newPassword)
+        {
+            user.HashedPassword = BCrypt.HashPassword(newPassword);
+            _db.Users.Update(user);
+        }
+
+        public void VerifyUser(User user)
+        {
+            user.VerifiedAt = DateTime.Now;
         }
     }
 }

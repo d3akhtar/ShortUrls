@@ -92,13 +92,13 @@ function Home() {
         (shortLink == "" ? (
             <div className='text-white'>
                 <div className='vh-100 d-flex justify-content-center align-items-center w-100'>
-                    <div className='row w-50 border'>
-                        <form onSubmit={handleSubmit} className='p-5 bg-dark'>
-                            <div className='text-info h5 text-start'>Shorten A Long Url</div>
+                    <div className='row border' style={{minWidth: "400px", width:"40%"}}>
+                        <form onSubmit={handleSubmit} className='p-5 bg-white border shadow-sm' >
+                            <div className='text-dark lead fw-bold h5 fs-4 text-start'>Shorten A Long Url</div>
                             <input name="url" className='form-control mt-2' onChange={handleChange} value={formData.url} placeholder='Enter url here'></input>
-                            <div className='text-info text-start mt-4'>Enter an alias here (optional)</div>
+                            <div className='text-dark text-start lead fs-6 mt-4'>Enter an alias here (optional)</div>
                             <input name="alias" className='form-control mt-2' onChange={handleChange} value={formData.alias} placeholder='Enter alias here'></input>
-                            <button className='btn btn-success form-control mt-3'>Get Shortened Link</button>
+                            <button className='btn btn-dark form-control mt-3'>Get Shortened Link</button>
                         </form>
                     </div>
                 </div>
@@ -106,9 +106,9 @@ function Home() {
         ):(
             <div className='text-white'>
                 <div className='vh-100 d-flex justify-content-center align-items-center w-100'>
-                    <div className='row w-50 border'>
-                        <div className='p-5 bg-dark'>
-                            <div className='text-info h5 text-start'>Your shortened link:</div>
+                    <div className='row border' style={{minWidth: "400px", width:"40%"}}>
+                        <div className='p-5 bg-white'>
+                            <div className='text-dark h5 text-start'>Your shortened link:</div>
                             <input disabled name="url" className='form-control mt-2' value={shortLink} placeholder={shortLink}></input>
                             <div className='container d-flex justify-content-between mt-3'>
                                 <div className='d-flex'>
@@ -128,7 +128,13 @@ function Home() {
                                 }} className='btn btn-warning'><i className="me-1 bi bi-plus-circle"></i> Get New Link</button>
                                 {showQrCode ? (
                                     <div className='container d-flex align-items-center bg-white border' 
-                                    style={{position:"fixed", top: "58%", left:"33%", width:"350px", height: "160px"}}>
+                                    style={{position:"absolute", top: "58%", left:"38%", width:"350px", height: "160px"}}>
+                                        <span className='text-danger'
+                                        onClick={() => setShowQrCode(false)}
+                                        style={{position:"absolute", top: "10px", right:"10px", cursor:"pointer"}}
+                                        >
+                                            <i className="bi bi-x-circle"></i>
+                                        </span>
                                         <div className='col-12 col-md-4'>
                                             <img 
                                             src={`data:image/png;base64,${qrCodeString}`} 

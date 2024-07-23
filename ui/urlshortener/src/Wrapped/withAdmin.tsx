@@ -6,7 +6,7 @@ const withAdmin = (WrappedComponent : any) => {
     return(props: any) => {
         const token = localStorage.getItem(SD_General.tokenKey);
         if (!token){
-            window.location.replace("/UrlShortener/Login")
+            window.location.replace("/ShortUrls/Login")
             return null; 
         }
         else{
@@ -15,7 +15,7 @@ const withAdmin = (WrappedComponent : any) => {
                 return <WrappedComponent {...props}/>
             }
             else{
-                window.location.replace("/UrlShortener/AccessDenied")
+                window.location.replace("/ShortUrls/AccessDenied")
                 return null; 
             }
         }

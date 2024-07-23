@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using AuthService.DTO;
 using AuthService.Model;
 using AutoMapper;
@@ -27,7 +28,12 @@ namespace AuthService.Data
                 Password = _configuration["AdminAccountInfo:Password"]
             };
             User adminUser = _mapper.Map<User>(adminRegInfo);
+            
+            adminUser.UserId = 1;
             adminUser.Role = "admin"; 
+            adminUser.VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+            adminUser.CreatedAt = DateTime.Now;
+            adminUser.VerifiedAt = DateTime.Now;
 
             modelBuilder.Entity<User>().HasData(new List<User>{
                 adminUser

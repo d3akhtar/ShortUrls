@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import { About, AllUrls, Denied, Home, Login, NotFound, Register, Urls } from './Pages';
+import { About, AllUrls, Denied, ForgotPassword, Home, Login, NotFound, Register, ResetPassword, Urls, Verification } from './Pages';
 import { Header } from './Layout';
 
 function App() {
@@ -11,14 +11,17 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Home/>}/>
-          <Route path="/UrlShortener" element={<Home/>}/>
+          <Route path="/ShortUrls" element={<Home/>}/>
           <Route path="*" element={<NotFound/>}/>
-          <Route path="/UrlShortener/Login" element={<Login/>}/>
-          <Route path="/UrlShortener/Register" element={<Register/>}/>
-          <Route path="/UrlShortener/AllLinks" element={<AllUrls/>}/>
-          <Route path="/UrlShortener/Links" element={<Urls/>}/>
-          <Route path="/UrlShortener/AccessDenied" element={<Denied/>}/>
-          <Route path="/UrlShortener/About" element={<About/>}/>
+          <Route path="/ShortUrls/Login" element={<Login/>}/>
+          <Route path="/ShortUrls/Register" element={<Register/>}/>
+          <Route path="/ShortUrls/AllLinks" element={<AllUrls/>}/>
+          <Route path="/ShortUrls/Links" element={<Urls/>}/>
+          <Route path="/ShortUrls/AccessDenied" element={<Denied/>}/>
+          <Route path="/ShortUrls/About" element={<About/>}/>
+          <Route path="/ShortUrls/ForgotPassword" element={<ForgotPassword/>}/>
+          <Route path="/ShortUrls/Verification/:email" element={<Verification/>}/>
+          <Route path="/ShortUrls/ResetPassword/:token" element={<ResetPassword/>}/>
         </Routes>
       </div>
     </div>

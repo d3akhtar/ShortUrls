@@ -6,6 +6,9 @@ import AllUrls from "./AllUrls";
 import Denied from "./Denied";
 import Urls from "./Urls";
 import About from "./About";
+import ResetPassword from "./ResetPassword";
+import ForgotPassword from "./ForgotPassword";
+import Verification from "./Verification";
 
 export {
     Home,
@@ -15,5 +18,8 @@ export {
     AllUrls,
     Denied,
     Urls,
-    About
+    About,
+    ResetPassword,
+    ForgotPassword,
+    Verification
 }

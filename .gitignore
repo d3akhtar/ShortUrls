@@ -27,3 +27,4 @@ ui/urlshortener/yarn-debug.log*
 ui/urlshortener/yarn-error.log*
 
 .vs/*
+*flutter*

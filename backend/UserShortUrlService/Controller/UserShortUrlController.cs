@@ -151,13 +151,13 @@ namespace UserShortUrlService.Controller
             }
         }
 
-        private static string GetUserIdFromHttpRequest(HttpRequest request){
+        private static int GetUserIdFromHttpRequest(HttpRequest request){
             var tokenString = GetJwtTokenFromHttpRequest(request);
             Console.WriteLine("tokenString: " + tokenString);
             if (tokenString == null) throw new ArgumentException("Error occured while decoding token.");
             var jwtPayload = GetJwtPayloadFromTokenString(tokenString);
             if (jwtPayload.TryGetValue("userId", out var userId)){
-                return userId.ToString();
+                return int.Parse(userId.ToString());
             }
             else{
                 throw new ArgumentException("Error occured while decoding token.");

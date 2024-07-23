@@ -27,7 +27,7 @@ namespace UserShortUrlService.Data.Repository
             _db.Users.Add(user);
         }
 
-        public async Task<IEnumerable<UserShortUrl>> AddUserShortUrls(string userId, List<string> codes)
+        public async Task<IEnumerable<UserShortUrl>> AddUserShortUrls(int userId, List<string> codes)
         {
             List<UserShortUrl> addedUserShortUrls = new List<UserShortUrl>();
             foreach (var code in codes){
@@ -53,19 +53,19 @@ namespace UserShortUrlService.Data.Repository
             return addedUserShortUrls;
         }
 
-        public UserShortUrl DeleteUserShortUrl(string userId, string code)
+        public UserShortUrl DeleteUserShortUrl(int userId, string code)
         {
             UserShortUrl userShortUrl = _db.UserShortUrls.First(usrc => usrc.UserId == userId && usrc.ShortUrlCode == code);
             _db.UserShortUrls.Remove(userShortUrl);
             return userShortUrl;
         }
 
-        public bool DoesUserShortUrlExist(string userId, string code)
+        public bool DoesUserShortUrlExist(int userId, string code)
         {
             return _db.UserShortUrls.FirstOrDefault(usrc => usrc.UserId == userId && usrc.ShortUrlCode == code) != null;
         }
 
-        public bool DoesUserWithIdExist(string userId)
+        public bool DoesUserWithIdExist(int userId)
         {
             return _db.Users.FirstOrDefault(u => u.UserId == userId) != null;
         }
@@ -85,7 +85,7 @@ namespace UserShortUrlService.Data.Repository
                                     .Take(pageSize);
         }
 
-        public IEnumerable<UserShortUrl> GetUserShortUrlCodes(string userId, string searchQuery, int pageNumber, int pageSize)
+        public IEnumerable<UserShortUrl> GetUserShortUrlCodes(int userId, string searchQuery, int pageNumber, int pageSize)
         {
             return _db.UserShortUrls.Include(usrc => usrc.User)
                                     .Where(usrc => usrc.UserId == userId)

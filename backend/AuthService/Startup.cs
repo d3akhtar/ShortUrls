@@ -1,9 +1,11 @@
 
 using AuthService.AsyncDataServices;
+using AuthService.BackgroundServices;
 using AuthService.Data;
 using AuthService.Data.Repository;
 using AuthService.ExternalAuthServices;
 using AuthService.SyncDataServices.Grpc;
+using AuthService.SyncDataServices.Smtp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +36,8 @@ public class Startup
         services.AddSingleton<IRabbitMqClient, RabbitMqClient>();
         services.AddGrpc();
         services.AddCors();
+        services.AddHostedService<VerificationChecker>();
+        services.AddScoped<IEmailService, EmailService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,19 +62,5 @@ public class Startup
                 await context.Response.WriteAsync(File.ReadAllText("Protos/users.proto")); 
             }); // see users.proto file
         });
-
-        using (var scope = app.ApplicationServices.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetService<AppDbContext>();
-            db.Database.Migrate(); // want to crash if connection fails so it auto restarts
-            // try{
-            //     Console.WriteLine("part of conn string: " + Configuration.GetConnectionString("Azure").Substring(10));
-            //     //if (_env.IsProduction())
-            //         db.Database.Migrate();
-            // }
-            // catch(Exception ex){
-            //     Console.WriteLine("--> Error while applying migrations for shorturl db: " + ex.Message);
-            // }
-        }
     }
 }

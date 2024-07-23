@@ -73,14 +73,14 @@ function UrlCodeRow(props: UrlCodeRowProps) {
         {isLoading ?
           (<MainLoader/>):
           (
-          <div className='row w-100 border text-start'>
-            <div className='p-1 col-12 col-md-3 d-flex align-items-center justify-content-center' style={{borderRight:"1px solid white"}}>
+          <div className='row w-100 bg-light text-start'>
+            <div className='p-1 col-12 col-md-3 d-flex align-items-center justify-content-center'>
             <img 
             src={`data:image/png;base64,${props.shortUrl.pngQrCodeImage}`} 
             alt="Red dot"
             width="100px"
             height="100px"
-            className='p-1'
+            className='p-1 border'
             />
             <button onClick={() => toggleQrCodeDownloadSectionShowing(!qrCodeDownloadSectionShowing)} className={`btn btn-${qrCodeDownloadSectionShowing ? "danger":"primary"} ms-3`}><i className={`bi ${qrCodeDownloadSectionShowing ? "bi-x-lg":"bi-download"}`}></i></button>
             {qrCodeDownloadSectionShowing ? 
@@ -106,16 +106,16 @@ function UrlCodeRow(props: UrlCodeRowProps) {
               <></>
             )}
             </div>
-            <div className='p-1 col-12 col-md-1 d-flex align-items-center' style={{borderRight:"1px solid white"}}>
-              <span className='ms-1 text-light'>{props.shortUrlCode}</span>
+            <div className='p-1 col-12 col-md-1 d-flex align-items-center' style={{wordWrap: "break-word", whiteSpace:"pre-wrap", wordBreak:"break-word"}}>
+              <span className='ms-1 text-dark'>{props.shortUrlCode}</span>
             </div>
-            <div className='p-1 col-12 col-md-7 d-flex align-items-center' style={{borderRight:"1px solid white"}}>
+            <div className='p-1 col-12 col-md-7 d-flex align-items-center' style={{wordWrap: "break-word", whiteSpace:"pre-wrap", wordBreak:"break-word"}}>
               {isEditing ? 
                 (
                   <input onChange={(e) => setEditData(inputHelper(e, editData))} className='ms-1 form-control' name='link' value={editData.link}></input>
                 ):
                 (
-                  <a className='ms-1 text-light' href={props.destinationUrl}>{props.destinationUrl}</a>
+                  <a className='ms-1 text-dark' href={props.destinationUrl}>{props.destinationUrl}</a>
                 )
               }
             </div>

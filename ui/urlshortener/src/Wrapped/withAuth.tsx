@@ -3,7 +3,7 @@ import { SD_General } from "../constants/constants";
 const withAuth = (WrappedComponent : any) => {
     return(props: any) => {
         if (!localStorage.getItem(SD_General.tokenKey)){
-            window.location.replace("/UrlShortener/Login")
+            window.location.replace("/ShortUrls/Login")
             return null; 
         }
         return <WrappedComponent {...props}/>

@@ -27,13 +27,13 @@ function AllUrls() {
         console.log(error);
     }
   return (
-    <div className='vh-100 bg-dark w-100 d-flex justify-content-center' style={{overflow: "auto"}}>
+    <div className='vh-100 bg-light w-100 d-flex justify-content-center' style={{overflow: "auto"}}>
       {!isLoading && isSuccess ? 
         (
-          <div className='w-75'>
+          <div className='px-5 py-2 border bg-white shadow-sm' style={{width:"80%"}}>
             <div className='row w-100' style={{height:"12%"}}></div>
             <div className='row w-100 text-start d-flex justify-content-between'>
-              <div className='h2 text-info w-25'>All Urls</div>
+              <div className='h2 text-dark w-25'>All Urls</div>
               <form className='w-25'>
                 <input 
                   onChange={(e) => {
@@ -52,18 +52,18 @@ function AllUrls() {
                   </input>
               </form>
             </div>
-            <div className='row w-100 text-start'>
-              <div className='p-2 col-12 col-md-3 border'>
-                <span className='text-info h3'>QR</span>
+            <div className='row bg-light w-100 text-start border'>
+              <div className='p-2 col-12 col-md-3 '>
+                <span className='text-dark h3'>QR</span>
               </div>
-              <div className='p-2 col-12 col-md-1 border'>
-                <span className='text-info h3'>Code</span>
+              <div className='p-2 col-12 col-md-1 '>
+                <span className='text-dark h3'>Code</span>
               </div>
-              <div className='p-2 col-12 col-md-7 border'>
-                <span className='text-info h3'>Url</span>
+              <div className='p-2 col-12 col-md-7 '>
+                <span className='text-dark h3'>Url</span>
               </div>
-              <div className='p-2 col-12 col-md-1 border'>
-                <span className='text-info h3'>Actions</span>
+              <div className='p-2 col-12 col-md-1 '>
+                <span className='text-dark h3'>Actions</span>
               </div>
             </div>
             {
@@ -74,11 +74,11 @@ function AllUrls() {
             <div className='row mt-3 w-100 text-start'>
               <div className='col-12 col-md-2'>
                 <div className='btn-group d-flex'>
-                  <button disabled={pageNumber == 1} onClick={() => setPageNumber(pageNumber == 1 ? 1:pageNumber - 1)} className='btn me-1 btn-light'>{"<"}</button>
-                  <button disabled={urlCodes!.length < pageSize} onClick={() => setPageNumber(pageNumber + 1)} className='btn btn-light'>{">"}</button>
+                  <button disabled={pageNumber == 1} onClick={() => setPageNumber(pageNumber == 1 ? 1:pageNumber - 1)} className='btn me-1 btn-dark'>{"<"}</button>
+                  <button disabled={urlCodes!.length < pageSize} onClick={() => setPageNumber(pageNumber + 1)} className='btn btn-dark'>{">"}</button>
                 </div>
               </div>
-              <div className='col-12 col-md-3 offset-7 mb-5 d-flex'>
+              <div className='col-12 col-md-3 mb-5 d-flex'>
                 <form className='me-4'>
                   <input min="1" type="number" onChange={(e) => setPageNumber(Number(e.target.value) < 1 || e.target.value == null ? 1:Number(e.target.value))} className='form-control' placeholder='Page Number' value={pageNumber}></input>
                 </form>

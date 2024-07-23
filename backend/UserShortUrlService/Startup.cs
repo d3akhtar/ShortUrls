@@ -117,14 +117,6 @@ public class Startup
             var db = scope.ServiceProvider.GetService<AppDbContext>();
 
             db.Database.Migrate(); // want to crash if connection fails so it auto restarts
-            // try{
-            //     Console.WriteLine("part of conn string: " + Configuration.GetConnectionString("Azure").Substring(10));
-            //     //if (_env.IsProduction())
-            //         db.Database.Migrate();
-            // }
-            // catch(Exception ex){
-            //     Console.WriteLine("--> Error while applying migrations for shorturl db: " + ex.Message);
-            // }
         }
         
         QrCodeStringGenerator.SetShortenedUrlBase(Configuration["ShortenedUrlBase"]);

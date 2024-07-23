@@ -46,7 +46,7 @@ function Login() {
                 username: decodedToken.username,
                 role: decodedToken.role
             }));
-            nav("/UrlShortener");
+            nav("/ShortUrls");
           }
 
           getAccessToken();
@@ -73,7 +73,7 @@ function Login() {
                     username: decodedToken.username,
                     role: decodedToken.role
                 }));
-                nav("/UrlShortener");
+                nav("/ShortUrls");
             }
             else{
                 setError(result.error.data);
@@ -92,27 +92,37 @@ function Login() {
         setFormData(newFormData);
     }
 
+    const formStyle :any = {
+        width: "25%",
+        minWidth: "300px"
+    }
+
   return (
-    <div className='bg-dark vh-100 d-flex align-items-center'>
-        <div className='w-100 p-5 bg-dark'>
+    <div className='vh-100 d-flex bg-light justify-content-center align-items-center'>
+        <div className='p-5 bg-white border shadow-sm' style={{width: "400px"}}>
             <div className='row w-100'>
-                <span className='h1 text-center text-success'>Login</span>
+                <span className='h1 text-center text-dark fw-bold'>LOGIN</span>
             </div>
-            <div className='row w-100 p-4'>
+            <div className='row w-100 p-1'>
                 <form onSubmit={handleSubmit}>
-                    <div className='m-3 d-flex justify-content-center'>
-                        <input onChange={handleInputChange} value={formData.email} name="email" className='form-control w-50' placeholder='Enter Email'></input>
+                    <label htmlFor="email" className='row text-start'>Email</label>
+                    <div className='d-flex justify-content-center'>
+                        <input onChange={handleInputChange} value={formData.email} name="email" className='form-control' placeholder='Enter Email' style={formStyle}></input>
                     </div>
-                    <div className='m-3 d-flex justify-content-center'>
-                        <input onChange={handleInputChange} value={formData.password} name="password" type="password" className='form-control w-50' placeholder='Enter Password'></input>
+                    <label htmlFor="password" className='row text-start mt-3'>Password</label>
+                    <div className='d-flex justify-content-center'>
+                        <input onChange={handleInputChange} value={formData.password} id="password" name="password" type="password" className='form-control' placeholder='Enter Password' style={formStyle}></input>
                     </div>
                     {error == "" ? (<></>):(
                         <div className='text-center'>
                             <p className='text-danger'>{error}</p>
                         </div>
                     )}
+                    <div className='d-flex justify-content-cente mt-3'>
+                        <span className='p text-center lead text-dark fs-6'>Forgot Password? Click <a style={{cursor: "pointer"}} onClick={() => nav("/ShortUrls/ForgotPassword")} className='text-link'>here</a> to reset it</span>
+                    </div>
                     <div className='d-flex justify-content-center'>
-                        <button type="submit" className='mt-1 btn btn-success form-control' style={{width:"5%"}}>Login</button>
+                        <button type="submit" className='mt-3 btn btn-success form-control' style={formStyle}>Login</button>
                     </div>
                     {isLoading ? 
                         (<div className='mt-5 d-flex justify-content-center'>
@@ -121,11 +131,11 @@ function Login() {
                         (<></>)
                     }
                 </form>
-                <div className='d-flex justify-content-center mt-3'>
-                    <p className='text-center text-white'>Or Choose One Of These</p>
+                <div className='d-flex justify-content-center mt-4'>
+                    <p className='text-center text-dark lead'>Or Login With:</p>
                 </div>
                 <div className='d-flex justify-content-center'>
-                    <button onClick={handleGoogleAuth} className='mt-1 btn btn-light'><i className="bi bi-google"></i></button>
+                    <button onClick={handleGoogleAuth} className='btn btn-dark' style={formStyle}><i className="bi bi-google"></i></button>
                 </div>
             </div>
         </div>

@@ -7,7 +7,7 @@ namespace UserShortUrlService.DTO
         public string PngQrCodeImage { get; set; }
         public string SvgQrCodeImage { get; set; }
         public string AsciiQrCodeImage { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public UserReadDTO User { get; set; }
     }
 }

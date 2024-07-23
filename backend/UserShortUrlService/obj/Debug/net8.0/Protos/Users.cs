@@ -25,7 +25,7 @@ namespace AuthService {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChJQcm90b3MvdXNlcnMucHJvdG8iFAoSR2V0QWxsVXNlcnNSZXF1ZXN0IkAK",
-            "DUdycGNVc2VyTW9kZWwSDgoGdXNlcklkGAEgASgJEg0KBWVtYWlsGAIgASgJ",
+            "DUdycGNVc2VyTW9kZWwSDgoGdXNlcklkGAEgASgFEg0KBWVtYWlsGAIgASgJ",
             "EhAKCHVzZXJuYW1lGAMgASgJIi0KDFVzZXJSZXNwb25zZRIdCgV1c2VycxgB",
             "IAMoCzIOLkdycGNVc2VyTW9kZWwyPgoJR3JwY1VzZXJzEjEKC0dldEFsbFVz",
             "ZXJzEhMuR2V0QWxsVXNlcnNSZXF1ZXN0Gg0uVXNlclJlc3BvbnNlQg6qAgtB",
@@ -244,13 +244,13 @@ namespace AuthService {
 
     /// <summary>Field number for the "userId" field.</summary>
     public const int UserIdFieldNumber = 1;
-    private string userId_ = "";
+    private int userId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string UserId {
+    public int UserId {
       get { return userId_; }
       set {
-        userId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        userId_ = value;
       }
     }
 
@@ -303,7 +303,7 @@ namespace AuthService {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (UserId.Length != 0) hash ^= UserId.GetHashCode();
+      if (UserId != 0) hash ^= UserId.GetHashCode();
       if (Email.Length != 0) hash ^= Email.GetHashCode();
       if (Username.Length != 0) hash ^= Username.GetHashCode();
       if (_unknownFields != null) {
@@ -324,9 +324,9 @@ namespace AuthService {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (UserId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(UserId);
+      if (UserId != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(UserId);
       }
       if (Email.Length != 0) {
         output.WriteRawTag(18);
@@ -346,9 +346,9 @@ namespace AuthService {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (UserId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(UserId);
+      if (UserId != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(UserId);
       }
       if (Email.Length != 0) {
         output.WriteRawTag(18);
@@ -368,8 +368,8 @@ namespace AuthService {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (UserId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(UserId);
+      if (UserId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(UserId);
       }
       if (Email.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Email);
@@ -389,7 +389,7 @@ namespace AuthService {
       if (other == null) {
         return;
       }
-      if (other.UserId.Length != 0) {
+      if (other.UserId != 0) {
         UserId = other.UserId;
       }
       if (other.Email.Length != 0) {
@@ -413,8 +413,8 @@ namespace AuthService {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 10: {
-            UserId = input.ReadString();
+          case 8: {
+            UserId = input.ReadInt32();
             break;
           }
           case 18: {
@@ -440,8 +440,8 @@ namespace AuthService {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 10: {
-            UserId = input.ReadString();
+          case 8: {
+            UserId = input.ReadInt32();
             break;
           }
           case 18: {

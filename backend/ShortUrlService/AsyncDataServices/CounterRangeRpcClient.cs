@@ -59,7 +59,6 @@ namespace ShortUrlService.AsyncDataServices
             var messageBytes = Encoding.UTF8.GetBytes(message);
             var tcs = new TaskCompletionSource<string>();
             _callbackMapper.TryAdd(correlationid, tcs);
-            Console.WriteLine("--> e");
             
              Console.WriteLine("--> Publishing");
             

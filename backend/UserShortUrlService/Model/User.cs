@@ -6,7 +6,7 @@ namespace UserShortUrlService.Model
     {
         [Key]
         [Required]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         [Required]
         public string Email { get; set; }
         [Required]
