@@ -24,7 +24,7 @@ function About() {
                     very long urls (such as urls with multiple or long query parameters), unless I decide to use a host with a shorter
                     name. <br/><br/>
 
-                    For any bugs, send an email to <a href="mailto:shorturls@danyalakt.com">shorturls@danyalakt.com</a> <br/>
+                    For any bugs or features you want added, send an email to <a href="mailto:shorturls@danyalakt.com">shorturls@danyalakt.com</a> <br/>
                     If you wish to contact me directly, send an email to <a href="mailto:danyal.akhtar@torontomu.ca">danyal.akhtar@torontomu.ca</a>
                 </span>
             </div>
