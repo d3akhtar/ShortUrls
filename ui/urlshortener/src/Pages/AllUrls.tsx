@@ -56,10 +56,10 @@ function AllUrls() {
               <div className='p-2 col-12 col-md-3 '>
                 <span className='text-dark h3'>QR</span>
               </div>
-              <div className='p-2 col-12 col-md-1 '>
+              <div className='p-2 col-12 col-md-3 '>
                 <span className='text-dark h3'>Code</span>
               </div>
-              <div className='p-2 col-12 col-md-7 '>
+              <div className='p-2 col-12 col-md-5 '>
                 <span className='text-dark h3'>Url</span>
               </div>
               <div className='p-2 col-12 col-md-1 '>

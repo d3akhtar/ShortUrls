@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { MiniLoader } from '../Components/Common';
 import { handleGoogleAuth, inputHelper } from '../Helpers';
-import { useLoginMutation, useRegisterMutation } from '../api/authApi';
+import { useRegisterMutation } from '../api/authApi';
 import { apiResponse, user } from '../Interfaces';
 import { SD_General } from '../constants/constants';
 import jwtDecode from 'jwt-decode';
 import { setUser } from '../redux/slices/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Cookies from "js-cookie";
 
 function Register() {
 
@@ -23,7 +22,6 @@ function Register() {
     const [isLoading,setIsLoading] = useState<boolean>(false);
 
     const [register] = useRegisterMutation();
-    const [login] = useLoginMutation();
     const dispatch = useDispatch();
 
     const nav = useNavigate();
@@ -34,23 +32,30 @@ function Register() {
     
         if (isMatch) {
           const accessToken = isMatch[1];
-          console.log("accessToken");
-          console.log(accessToken);
         
           const getAccessToken = async () => {
             var result = await fetch(`https://shorturls.danyalakt.com/auth/external-login?thirdPartyName=google&accessToken=${accessToken}`);
-            var response : apiResponse = await result.json();
-            console.log(response);
+            if (result.status === 200)
+            {
+                var response : apiResponse = await result.json();
+                console.log(response);
 
-            localStorage.setItem(SD_General.tokenKey,response.token!);
-            const decodedToken : user = jwtDecode(response.token!);
-            dispatch(setUser({
-                userId: decodedToken.userId,
-                email: decodedToken.email,
-                username: decodedToken.username,
-                role: decodedToken.role
-            }));
-            nav("/ShortUrls");
+                localStorage.setItem(SD_General.tokenKey,response.token!);
+                const decodedToken : user = jwtDecode(response.token!);
+                dispatch(setUser({
+                    userId: decodedToken.userId,
+                    email: decodedToken.email,
+                    username: decodedToken.username,
+                    role: decodedToken.role
+                }));
+                nav("/ShortUrls");
+            }
+            else
+            {
+                var response : apiResponse = await result.json();
+                console.log(response.message!)
+                setError(response.message!);
+            }
           }
 
           getAccessToken();

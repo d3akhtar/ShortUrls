@@ -106,10 +106,10 @@ function UrlCodeRow(props: UrlCodeRowProps) {
               <></>
             )}
             </div>
-            <div className='p-1 col-12 col-md-1 d-flex align-items-center' style={{wordWrap: "break-word", whiteSpace:"pre-wrap", wordBreak:"break-word"}}>
+            <div className='p-1 col-12 col-md-3 d-flex align-items-center' style={{wordWrap: "break-word", whiteSpace:"pre-wrap", wordBreak:"break-word"}}>
               <span className='ms-1 text-dark'>{props.shortUrlCode}</span>
             </div>
-            <div className='p-1 col-12 col-md-7 d-flex align-items-center' style={{wordWrap: "break-word", whiteSpace:"pre-wrap", wordBreak:"break-word"}}>
+            <div className='p-1 col-12 col-md-5 d-flex align-items-center' style={{wordWrap: "break-word", whiteSpace:"pre-wrap", wordBreak:"break-word"}}>
               {isEditing ? 
                 (
                   <input onChange={(e) => setEditData(inputHelper(e, editData))} className='ms-1 form-control' name='link' value={editData.link}></input>

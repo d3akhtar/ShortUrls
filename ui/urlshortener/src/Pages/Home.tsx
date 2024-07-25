@@ -3,8 +3,6 @@ import { useAddUrlMutation } from '../api/urlShortenerApi'
 import { MainLoader } from '../Components/Common';
 import { extractCodeFromShortUrl, inputHelper } from '../Helpers';
 import { apiResponse, urlCode, user } from '../Interfaces';
-import { useNavigate } from 'react-router-dom';
-import { isElementAccessExpression } from 'typescript';
 import { useSelector } from 'react-redux';
 import { useAddUserUrlMutation } from '../api/userUrlsApi';
 
@@ -17,14 +15,13 @@ function Home() {
         alias: ""
     }
 
-    const navigate = useNavigate();
-
     const [formData,setFormData] = useState(initialFormData);
     const [qrCodeString,setQrCodeString] = useState("");
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const [shortLink,setShortLink] = useState("");
     const [showQrCode,setShowQrCode] = useState<boolean>(false);
     const [shortUrl,setShortUrl] = useState<urlCode>();
+    const [error,setError] = useState<string>("");
 
     const [addUrl] = useAddUrlMutation();
     const [addUserUrl] = useAddUserUrlMutation();
@@ -36,6 +33,7 @@ function Home() {
 
     const handleSubmit = async () => {
         setIsLoading(true);
+        setError("");
 
         var result:any = await addUrl({
             url: formData.url,
@@ -43,9 +41,10 @@ function Home() {
         });
         console.log(result);
 
-        const response : apiResponse = result.error ? (result.error):(result.data);
+        const response : apiResponse = result.error ? (result.error.data):(result.data);
         if (result.error){
-            console.log(result.error);
+            console.log(response.message);
+            setError(response.message!);
             setIsLoading(false);
             return;
         }
@@ -99,6 +98,15 @@ function Home() {
                             <div className='text-dark text-start lead fs-6 mt-4'>Enter an alias here (optional)</div>
                             <input name="alias" className='form-control mt-2' onChange={handleChange} value={formData.alias} placeholder='Enter alias here'></input>
                             <button className='btn btn-dark form-control mt-3'>Get Shortened Link</button>
+                            { error != "" ? 
+                                (
+                                    <div className='text-danger text-center fw-bold lead fs-6 mt-4'>{error}</div>
+                                )
+                                :
+                                (
+                                    <></>
+                                )
+                            }
                         </form>
                     </div>
                 </div>
