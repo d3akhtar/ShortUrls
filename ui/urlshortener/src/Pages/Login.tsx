@@ -54,6 +54,30 @@ function Login() {
         }
       }, []);
 
+      const sendVerificationEmail = async() => {
+        const email = formData.email;
+        setError("");
+        setIsLoading(true);
+
+        var result = await fetch(`https://shorturls.danyalakt.com/auth/send-verification-email?email=${email}`);
+        console.log(result);
+        var response : apiResponse = await result.json();
+        
+        console.log("response");
+        console.log(response);
+        if (result){
+            if (result.status !== 200){
+                setError(response.message!);
+                console.log(response.message!);
+            }
+        }
+        else{
+            setError("Unknown error");
+            console.log("Unknown error");
+        }
+        setIsLoading(false);
+    }
+
     const handleSubmit = async (e : any) => {
         e.preventDefault();
         setIsLoading(true);
@@ -116,6 +140,17 @@ function Login() {
                     {error == "" ? (<></>):(
                         <div className='text-center'>
                             <p className='text-danger'>{error}</p>
+                            { error == "User must be verified first." ? 
+                                (
+                                    <div className='row w-100'>
+                                        <span className='badge text-dark mb-3'>Didn't get an email?. Click <a onClick={async () => await sendVerificationEmail()} className='text-link'>here</a> to send.</span>
+                                    </div>
+                                )
+                                :
+                                (
+                                    <></>
+                                )
+                            }
                         </div>
                     )}
                     <div className='d-flex justify-content-cente mt-3'>

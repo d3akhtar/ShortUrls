@@ -21,7 +21,7 @@ function Verification() {
 
         setIsLoading(true);
 
-        var result = await fetch(`http://localhost:5219/api/auth/send-verification-email?email=${email}`);
+        var result = await fetch(`https://shorturls.danyalakt.com/auth/send-verification-email?email=${email}`);
         console.log(result);
         var response : apiResponse = await result.json();
         

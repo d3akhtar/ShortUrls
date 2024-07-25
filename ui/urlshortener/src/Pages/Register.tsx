@@ -67,7 +67,6 @@ function Register() {
         if (result){
             var response : apiResponse = result.error ? (result.error.data):(result.data);
             if (!result.error){
-                // Automatically log user in if the registration was successful
                 nav(`/ShortUrls/Verification/${formData.email}`);
             }
             else{
